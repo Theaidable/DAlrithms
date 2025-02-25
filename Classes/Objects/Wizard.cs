@@ -4,38 +4,81 @@ using Microsoft.Xna.Framework.Input;
 
 namespace DAlgorithms.Classes.Objects
 {
+    public enum WizardState
+    {
+        Idle,
+        Running
+    }
+
     public class Wizard
     {
         public Vector2 Position { get; set; }
-        public Texture2D Texture { get; private set; }
         public bool HasPotion { get; set; }
 
-        public Wizard(Vector2 position, Texture2D texture)
+        // To sæt frames
+        private Texture2D[] idleFrames;
+        private Texture2D[] runFrames;
+
+        private int animationIndex = 0;
+        private float frameTime = 0.1f;
+        private float timer = 0f;
+
+        public WizardState CurrentState { get; set; } = WizardState.Idle;
+
+        public Wizard(Texture2D[] idleFrames, Texture2D[] runFrames, Vector2 position)
         {
+            this.idleFrames = idleFrames;
+            this.runFrames = runFrames;
             Position = position;
-            Texture = texture;
         }
 
-        /// <summary>
-        /// Flytter Wizarden til en ny position i tile-koordinater.
-        /// </summary>
-        /// <param name="newPosition">Ny tile-position (x,y).</param>
+        public void Update(GameTime gameTime)
+        {
+            timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (timer >= frameTime)
+            {
+                timer = 0f;
+                animationIndex++;
+
+                // Vælg hvilket frames-array vi bruger
+                switch (CurrentState)
+                {
+                    case WizardState.Idle:
+                        animationIndex %= idleFrames.Length;
+                        break;
+                    case WizardState.Running:
+                        animationIndex %= runFrames.Length;
+                        break;
+                }
+            }
+        }
+
+        public void Draw(SpriteBatch spriteBatch, float layerDepth)
+        {
+            Texture2D currentFrame = null;
+
+            // Vælg frame alt efter state
+            switch (CurrentState)
+            {
+                case WizardState.Idle:
+                    currentFrame = idleFrames[animationIndex];
+                    break;
+                case WizardState.Running:
+                    currentFrame = runFrames[animationIndex];
+                    break;
+            }
+
+            if (currentFrame != null)
+            {
+                spriteBatch.Draw(currentFrame, Position, null, Color.White, 0f,
+                                 Vector2.Zero, 1f, SpriteEffects.None, layerDepth);
+            }
+        }
+
         public void MoveTo(Vector2 newPosition)
         {
             Position = newPosition;
-        }
-
-        /// <summary>
-        /// Tegner wizarden på skærmen.
-        /// </summary>
-        /// <param name="spriteBatch">SpriteBatch til at tegne wizarden.</param>
-        /// <param name="layerDepth">Lagdybden for tegningen.</param>
-        public void Draw(SpriteBatch spriteBatch, float layerDepth)
-        {
-            if (Texture != null)
-            {
-                spriteBatch.Draw(Texture, Position, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, layerDepth);
-            }
+            // Sæt currentState = Running under bevægelse, eller sæt til Idle når stoppet
         }
     }
 }

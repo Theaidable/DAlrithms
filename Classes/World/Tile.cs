@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -47,22 +48,22 @@ namespace DAlgorithms.Classes.World
             Height = height;
             Type = type;
             Texture = texture;
+            this.sourceRectangle = sourceRectangle;
 
             switch (type)
             {
                 case TileType.Grass:
-                    // Denne rectangle udvælger en del af teksturet (her: x=20, y=20, bredde=150, højde=150) hvilket giver os græs
-                    this.sourceRectangle = new Rectangle(20, 20, 150, 150);
+                    this.sourceRectangle = new Rectangle(0, 0, 64, 64);
                     break;
                 case TileType.Wall:
-                    this.sourceRectangle = new Rectangle(20, 20, 150, 150);
+                    this.sourceRectangle = new Rectangle(0, 0, 64, 64);
                     IsWalkable = false;
                     break;
                 case TileType.Path:
-                    this.sourceRectangle = new Rectangle(40, 40, 500, 500);
+                    this.sourceRectangle = new Rectangle(0, 0, 64, 64);
                     break;
                 case TileType.Forest:
-                    this.sourceRectangle = new Rectangle(40, 40, 500, 500);
+                    this.sourceRectangle = new Rectangle(0, 0, 64, 64);
                     break;
             }
         }
