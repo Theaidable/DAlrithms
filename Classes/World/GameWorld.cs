@@ -6,6 +6,9 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using SharpDX.Direct2D1.Effects;
+using System;
+using System.Reflection.Metadata;
 
 namespace DAlgorithms.Classes.World
 {
@@ -15,22 +18,6 @@ namespace DAlgorithms.Classes.World
     /// </summary>
     public class GameWorld : Game
     {
-        private static GameWorld instance;
-
-        public static GameWorld Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new GameWorld();
-                }
-                return instance;
-            }
-        }
-
-        private static ContentManager content;
-
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
@@ -41,12 +28,32 @@ namespace DAlgorithms.Classes.World
         private Tower tower;
         private Key key;
         private TileMap tileMap;
+        private Tile tile;
 
-        // Keys
-        private List<Key> keys = new List<Key>();
+        //Objekter
+        private Tower iceTower;
+        private Tower stormTower;
+        private Key iceKey;
+        private Key stormKey;
 
-        // Buttons
+        //Textures
+        private Texture2D tileTexture;
+        private Texture2D buttonTexture;
+        private Texture2D pressedButtonTexture;
+        private Texture2D restartIcon;
+        private Texture2D aStarIcon;
+        private Texture2D dfsIcon;
+        private Texture2D iceTowerTexture;
+        private Texture2D stormTowerTexture;
+        private Texture2D[] iceTowerKeyTexture = new Texture2D[5];
+        private Texture2D[] stormTowerKeyTexture = new Texture2D[12];
+        private Texture2D[] portalTexture = new Texture2D[7];
+        private Texture2D[] wizardIdleTexture = new Texture2D[4];
+        private Texture2D[] wizardRunningTexture = new Texture2D[6];
+
+        //Lists
         private List<Button> buttons = new List<Button>();
+        private List<Key> keys = new List<Key>(); 
 
         /// <summary>
         /// GameWorld konstruktør, sætter isMouseVisible = true.
@@ -76,12 +83,134 @@ namespace DAlgorithms.Classes.World
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            LoadTextures();
+            LoadTileMap();
+            LoadButtons();
+            LoadTowers();
+            LoadKeys();
+            LoadPortal();
+            LoadWizard();
+        }
 
-            tileMap.LoadContent(content);
-            portal.LoadContent(content);
-            button.LoadContent(content);
-            tower.LoadContent(content);
-            key.LoadContent(content);
+        public void LoadTextures()
+        {
+            // Indlæs tile-texture (spritesheet)
+            tileTexture = Content.Load<Texture2D>("Assets/Tiles/Tiles");
+            
+            //Buttons
+            buttonTexture = Content.Load<Texture2D>("Assets/Buttons/Button_Blue");
+            pressedButtonTexture = Content.Load<Texture2D>("Assets/Buttons/Button_Blue_Pressed");
+            //restartIcon = content.Load<Texture2D>("Assets/Buttons/restartIcon");
+            //aStarIcon = content.Load<Texture2D>("Assets/Buttons/aStarIcon");
+            //TdfsIcon = content.Load<Texture2D>("Assets/Buttons/dfsIcon");
+
+            //Towers
+            iceTowerTexture = Content.Load<Texture2D>("Assets/Tower/IceTower");
+            stormTowerTexture = Content.Load<Texture2D>("Assets/Tower/StormTower");
+
+            //Keys
+            for (int i = 0; i < 5; i++)
+            {
+                iceTowerKeyTexture[i] = Content.Load<Texture2D>($"Assets/IceKey/IceKey_{i + 1}");
+            }
+
+            for (int i = 0; i < 12; i++)
+            {
+                stormTowerKeyTexture[i] = Content.Load<Texture2D>($"Assets/StormKey/StormKey_{i + 1}");
+            }
+
+            //Portal
+            for (int i = 0; i < portalTexture.Length; i++)
+            {
+                portalTexture[i] = Content.Load<Texture2D>($"Assets/Portal/Portal_{i + 1}");
+            }
+
+            //Wizard
+            for (int i = 0; i < wizardIdleTexture.Length; i++)
+            {
+                wizardIdleTexture[i] = Content.Load<Texture2D>($"Assets/Wizard/MiniMage_Idle00{i + 1}");
+            }
+
+            for (int i = 0; i < wizardRunningTexture.Length; i++)
+            {
+                wizardRunningTexture[i] = Content.Load<Texture2D>($"Assets/Wizard/MiniMage_Run00{i + 1}");
+            }
+        }
+
+        /// <summary>
+        /// Opretter tilemap'et baseret på de angivne dimensioner og tile teksturen.
+        /// </summary>
+        public void LoadTileMap()
+        {
+            int tileWidth = 16;
+            int tileHeight = 16;
+
+            int mapWidth = GraphicsDevice.Viewport.Width / tileWidth;
+            int mapHeight = GraphicsDevice.Viewport.Height / tileHeight;
+
+            tileMap = new TileMap(mapWidth, mapHeight, tileWidth, tileHeight, tileTexture);
+        }
+
+        public void LoadButtons()
+        {
+            Button btnRestartGame = new Button(buttonTexture, new Vector2(50, 10))
+            {
+                Icon = restartIcon,
+                IconSourceRect = new Rectangle(0, 0, 150, 150), //Skal muligvis slettes
+                PressedTexture = pressedButtonTexture,
+            };
+
+            Button btnAStar = new Button(buttonTexture, new Vector2(btnRestartGame.Position.X + btnRestartGame.Texture.Width + 75, 10))
+            {
+                Icon = aStarIcon,
+                IconSourceRect = new Rectangle(0, 0, 150, 150), //Skal muligvis slettes
+                PressedTexture = pressedButtonTexture,
+            };
+
+            Button btnDFS = new Button(buttonTexture, new Vector2(btnAStar.Position.X + btnAStar.Texture.Width + 75, 10))
+            {
+                Icon = dfsIcon,
+                IconSourceRect = new Rectangle(0, 0, 150, 150), //Skal muligvis slettes
+                PressedTexture = pressedButtonTexture,
+            };
+
+            buttons.Add(btnRestartGame);
+            buttons.Add(btnAStar);
+            buttons.Add(btnDFS);
+        }
+
+        /// <summary>
+        /// Opretter baserne (TownHalls) for de to fraktioner.
+        /// </summary>
+        public void LoadTowers()
+        {
+            int offsetX = 50;
+            int windowHeight = GraphicsDevice.Viewport.Height;
+            int windowWidth = GraphicsDevice.Viewport.Width;
+
+            Vector2 icePosition = new Vector2(offsetX, (windowHeight - iceTowerTexture.Height) / 2);
+            Vector2 stormPosition = new Vector2(windowWidth - stormTowerTexture.Width - offsetX, (windowHeight - stormTowerTexture.Height) / 2);
+
+            iceTower = new Tower(TowerType.Ice, icePosition, iceTowerTexture);
+            stormTower = new Tower(TowerType.Storm, stormPosition, stormTowerTexture);
+        }
+
+        public void LoadKeys()
+        {
+            //Keys placering
+
+            //keys.Add(iceKey);
+            //keys.Add(stormKey);
+        }
+
+        public void LoadPortal()
+        {
+            //Portals placering
+        }
+
+        public void LoadWizard()
+        {
+            //Wizard start placering
         }
 
         /// <summary>
@@ -91,14 +220,24 @@ namespace DAlgorithms.Classes.World
         protected override void Update(GameTime gameTime)
         {
             // Luk spil med ESC
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
             // Opdater knapper
-            foreach (var btn in buttons)
+            foreach (Button btn in buttons)
             {
                 btn.Update(gameTime);
             }
+
+            // Opdater keys
+            /*
+            foreach (Key key in keys)
+            {
+                key.Update(gameTime);
+            }
+            */
+
+            //portal.Update(gameTime);
+            //wizard.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -110,31 +249,35 @@ namespace DAlgorithms.Classes.World
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
 
             // Tegn tilemap
             tileMap.Draw(_spriteBatch, 0.0f);
 
             // Tegn portal
-            portal.Draw(_spriteBatch, 0.3f);
+            //portal.Draw(_spriteBatch, 0.3f);
 
             // Tegn towers
-            tower.Draw(_spriteBatch, 0.3f);
+            iceTower.Draw(_spriteBatch, 0.3f);
+            stormTower.Draw(_spriteBatch, 0.3f);
 
-            // Tegn keys
+            //Tegn Keys
+
+            /*
             foreach (Key key in keys)
             {
-                key.Draw(_spriteBatch, 0.4f);
+                key.Draw(_spriteBatch, 0.3f);
             }
-
-            // Tegn wizard
-            wizard.Draw(_spriteBatch, 0.5f);
+            */
 
             // Tegn knapper
             foreach (Button btn in buttons)
             {
-                btn.Draw(_spriteBatch, 0.9f);
+                btn.Draw(_spriteBatch, 1.0f);
             }
+
+            // Tegn wizard
+            //wizard.Draw(_spriteBatch, 0.5f);
 
             _spriteBatch.End();
 

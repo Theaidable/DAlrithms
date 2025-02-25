@@ -25,34 +25,11 @@ namespace DAlgorithms.Classes.Objects
         private Tower stormTower;
         private Tower iceTower;
 
-        public Tower(Vector2 position, Texture2D texture)
+        public Tower(TowerType towerType,Vector2 position, Texture2D texture)
         {
+            Type = towerType;
             Position = position;
             Texture = texture;
-        }
-
-        public void LoadContent(ContentManager content)
-        {
-            iceTowerTexture = content.Load<Texture2D>("Assets/Objects/Towers/Tower_Blue");
-            stormTowerTexture = content.Load<Texture2D>("Assets/Objects/Towers/Tower_Yellow");
-
-            LoadTowers();
-        }
-
-        /// <summary>
-        /// Opretter baserne (TownHalls) for de to fraktioner.
-        /// </summary>
-        public void LoadTowers()
-        {
-            int offsetX = 50;
-            int windowHeight = GameWorld.Instance.GraphicsDevice.Viewport.Height;
-            int windowWidth = GameWorld.Instance.GraphicsDevice.Viewport.Width;
-
-            Vector2 icePosition = new Vector2(offsetX, (windowHeight - iceTowerTexture.Height) / 2);
-            Vector2 stormPosition = new Vector2(windowWidth - stormTowerTexture.Width - offsetX, (windowHeight - stormTowerTexture.Height) / 2);
-
-            iceTower = new Tower(icePosition, iceTowerTexture);
-            stormTower = new Tower(stormPosition, stormTowerTexture);
         }
 
         /// <summary>
@@ -62,10 +39,7 @@ namespace DAlgorithms.Classes.Objects
         /// <param name="layerDepth"></param>
         public void Draw(SpriteBatch spriteBatch, float layerDepth)
         {
-            if (Texture != null)
-            {
-                spriteBatch.Draw(Texture, Position, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, layerDepth);
-            }
+            spriteBatch.Draw(Texture, Position, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, layerDepth);
         }
     }
 }

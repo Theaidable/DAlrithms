@@ -11,7 +11,7 @@ namespace DAlgorithms.Classes.Objects
     public class Portal
     {
         public Vector2 Position { get; private set; }
-        private Texture2D[] frames;
+        private Texture2D[] portalTexture;
         private int animationIndex = 0;
         private float frameTime = 0.1f;
         private float timer = 0f;
@@ -21,22 +21,10 @@ namespace DAlgorithms.Classes.Objects
         /// </summary>
         /// <param name="frames">Array af teksturer for portalens animation.</param>
         /// <param name="position">Positionen for portalen.</param>
-        public Portal(Texture2D[] frames, Vector2 position)
+        public Portal(Vector2 position, Texture2D[] texture)
         {
-            this.frames = frames;
+            this.portalTexture = texture;
             this.Position = position;
-        }
-
-        /// <summary>
-        /// Indlæser portalens indhold (teksturer).
-        /// </summary>
-        /// <param name="content">ContentManager til at loade teksturer.</param>
-        public void LoadContent(ContentManager content)
-        {
-            for (int i = 0; i < frames.Length; i++)
-            {
-                frames[i] = content.Load<Texture2D>($"Assets/Objects/Portal/portal1_frame_{i + 1}");
-            }
         }
 
         /// <summary>
@@ -49,7 +37,7 @@ namespace DAlgorithms.Classes.Objects
             if (timer >= frameTime)
             {
                 timer = 0f;
-                animationIndex = (animationIndex + 1) % frames.Length;
+                animationIndex = (animationIndex + 1) % portalTexture.Length;
             }
         }
 
@@ -60,7 +48,7 @@ namespace DAlgorithms.Classes.Objects
         /// <param name="layerDepth">Lagdybden for tegningen.</param>
         public void Draw(SpriteBatch spriteBatch, float layerDepth)
         {
-            spriteBatch.Draw(frames[animationIndex], Position, Color.White);
+            spriteBatch.Draw(portalTexture[animationIndex], Position, Color.White);
         }
     }
 }

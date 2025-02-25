@@ -14,7 +14,6 @@ namespace DAlgorithms.Classes.World
         private int tileWidth;   // Bredde af hver tile
         private int tileHeight;  // Højde af hver tile
         private Texture2D tileTexture; // Tekstur/spritesheet for tiles
-        private TileMap tileMap;
 
         /// <summary>
         /// Konstruerer en ny TileMap med de angivne dimensioner og tekstur.
@@ -33,6 +32,11 @@ namespace DAlgorithms.Classes.World
             this.tileHeight = tileHeight;
             this.tileTexture = tileTexture;
 
+            GenerateMap();
+        }
+
+        public void GenerateMap()
+        {
             // Opret et 2D-array med Tile-objekter
             tiles = new Tile[mapWidth, mapHeight];
 
@@ -49,29 +53,9 @@ namespace DAlgorithms.Classes.World
 
                     // Opret en ny tile af typen Grass
                     tiles[x, y] = new Tile(position, tileWidth, tileHeight, TileType.Grass, tileTexture, sourceRectangle);
+
                 }
             }
-        }
-
-        public void LoadContent(ContentManager content)
-        {
-            // Indlæs tile-texture (spritesheet)
-            tileTexture = content.Load<Texture2D>("Assets/World/TileMap_Flat");
-
-            LoadTileMap();
-        }
-
-        /// <summary>
-        /// Opretter tilemap'et baseret på de angivne dimensioner og tile teksturen.
-        /// </summary>
-        public void LoadTileMap()
-        {
-            int mapWidth = 40;
-            int mapHeight = 30;
-            int tileWidth = 150;
-            int tileHeight = 150;
-
-            tileMap = new TileMap(mapWidth, mapHeight, tileWidth, tileHeight, tileTexture);
         }
 
         /// <summary>

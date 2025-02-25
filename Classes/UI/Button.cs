@@ -77,7 +77,7 @@ namespace DAlgorithms.Classes.UI
         public Texture2D PressedButtonTexture { get; set; }
         private Texture2D restartIcon;
         private Texture2D aStarIcon;
-        private Texture2D dtsIcon;
+        private Texture2D dfsIcon;
 
         /// <summary>
         /// Konstruerer en ny Button med den angivne tekstur og position.
@@ -88,35 +88,6 @@ namespace DAlgorithms.Classes.UI
         {
             Texture = texture;
             Position = position;
-        }
-
-        public void LoadContent(ContentManager content)
-        {
-            ButtonTexture = content.Load<Texture2D>("Assets/UI/Button/Button_Blue");
-            PressedButtonTexture = content.Load<Texture2D>("Assets/UI/Button/Button_Blue_Pressed");
-
-            LoadButtons();
-        }
-
-        public void LoadButtons()
-        {
-            Button btnRestartGame = new Button(ButtonTexture, new Vector2(50, 10))
-            {
-                IconSourceRect = new Rectangle(0, 0, 150, 150),
-                PressedTexture = PressedButtonTexture,
-            };
-
-            Button btnAStar = new Button(ButtonTexture, new Vector2(btnRestartGame.Position.X + btnRestartGame.Texture.Width + 75, 10))
-            {
-                IconSourceRect = new Rectangle(0, 0, 150, 150),
-                PressedTexture = PressedButtonTexture,
-            };
-
-            Button btnDTS = new Button(ButtonTexture, new Vector2(btnAStar.Position.X + btnAStar.Texture.Width + 75, 10))
-            {
-                IconSourceRect = new Rectangle(0, 0, 150, 150),
-                PressedTexture = PressedButtonTexture,
-            };
         }
 
         /// <summary>
@@ -177,3 +148,5 @@ namespace DAlgorithms.Classes.UI
                 spriteBatch.DrawString(Font, Text, textPosition, Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.00f);
             }
         }
+    }
+}
