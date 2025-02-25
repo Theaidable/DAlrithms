@@ -1,4 +1,6 @@
 ﻿using DAlgorithms.Classes.Objects;
+using DAlgorithms.Classes.UI;
+using DAlgorithms.Classes.Algorithms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
