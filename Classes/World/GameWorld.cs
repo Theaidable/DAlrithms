@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace DAlgorithms
+namespace DAlgorithms.Classes.World
 {
     public class GameWorld : Game
     {

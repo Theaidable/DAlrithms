@@ -1,3 +1,3 @@
 ﻿
-using var game = new DAlgorithms.GameWorld();
+using var game = new DAlgorithms.Classes.World.GameWorld();
 game.Run();
