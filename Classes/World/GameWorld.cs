@@ -51,12 +51,9 @@ namespace DAlgorithms.Classes.World
         private Texture2D[] wizardIdleTexture = new Texture2D[4];
         private Texture2D[] wizardRunningTexture = new Texture2D[6];
 
-
-        // Keys
-        private List<Key> keys = new List<Key>();
-
-        // Buttons
+        //Lists
         private List<Button> buttons = new List<Button>();
+        private List<Key> keys = new List<Key>(); 
 
         /// <summary>
         /// GameWorld konstruktør, sætter isMouseVisible = true.
@@ -145,10 +142,11 @@ namespace DAlgorithms.Classes.World
         /// </summary>
         public void LoadTileMap()
         {
-            int mapWidth = 40;
-            int mapHeight = 30;
-            int tileWidth = 150;
-            int tileHeight = 150;
+            int tileWidth = 16;
+            int tileHeight = 16;
+
+            int mapWidth = GraphicsDevice.Viewport.Width / tileWidth;
+            int mapHeight = GraphicsDevice.Viewport.Height / tileHeight;
 
             tileMap = new TileMap(mapWidth, mapHeight, tileWidth, tileHeight, tileTexture);
         }
@@ -158,23 +156,27 @@ namespace DAlgorithms.Classes.World
             Button btnRestartGame = new Button(buttonTexture, new Vector2(50, 10))
             {
                 Icon = restartIcon,
-                IconSourceRect = new Rectangle(0, 0, 150, 150),
+                IconSourceRect = new Rectangle(0, 0, 150, 150), //Skal muligvis slettes
                 PressedTexture = pressedButtonTexture,
             };
 
             Button btnAStar = new Button(buttonTexture, new Vector2(btnRestartGame.Position.X + btnRestartGame.Texture.Width + 75, 10))
             {
                 Icon = aStarIcon,
-                IconSourceRect = new Rectangle(0, 0, 150, 150),
+                IconSourceRect = new Rectangle(0, 0, 150, 150), //Skal muligvis slettes
                 PressedTexture = pressedButtonTexture,
             };
 
             Button btnDFS = new Button(buttonTexture, new Vector2(btnAStar.Position.X + btnAStar.Texture.Width + 75, 10))
             {
                 Icon = dfsIcon,
-                IconSourceRect = new Rectangle(0, 0, 150, 150),
+                IconSourceRect = new Rectangle(0, 0, 150, 150), //Skal muligvis slettes
                 PressedTexture = pressedButtonTexture,
             };
+
+            buttons.Add(btnRestartGame);
+            buttons.Add(btnAStar);
+            buttons.Add(btnDFS);
         }
 
         /// <summary>
@@ -196,6 +198,9 @@ namespace DAlgorithms.Classes.World
         public void LoadKeys()
         {
             //Keys placering
+
+            //keys.Add(iceKey);
+            //keys.Add(stormKey);
         }
 
         public void LoadPortal()
@@ -215,18 +220,24 @@ namespace DAlgorithms.Classes.World
         protected override void Update(GameTime gameTime)
         {
             // Luk spil med ESC
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
             // Opdater knapper
-            foreach (var btn in buttons)
+            foreach (Button btn in buttons)
             {
                 btn.Update(gameTime);
             }
 
+            // Opdater keys
+            /*
+            foreach (Key key in keys)
+            {
+                key.Update(gameTime);
+            }
+            */
+
             //portal.Update(gameTime);
             //wizard.Update(gameTime);
-            //key.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -250,9 +261,14 @@ namespace DAlgorithms.Classes.World
             iceTower.Draw(_spriteBatch, 0.3f);
             stormTower.Draw(_spriteBatch, 0.3f);
 
-            // Tegn keys
-            //iceKey.Draw(_spriteBatch, 0.3f);
-            //stormKey.Draw(_spriteBatch, 0.3f);
+            //Tegn Keys
+
+            /*
+            foreach (Key key in keys)
+            {
+                key.Draw(_spriteBatch, 0.3f);
+            }
+            */
 
             // Tegn knapper
             foreach (Button btn in buttons)
