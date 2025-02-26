@@ -142,8 +142,8 @@ namespace DAlgorithms.Classes.World
         /// </summary>
         public void LoadTileMap()
         {
-            int tileWidth = 16;
-            int tileHeight = 16;
+            int tileWidth = 80;
+            int tileHeight = 80;
 
             int mapWidth = GraphicsDevice.Viewport.Width / tileWidth;
             int mapHeight = GraphicsDevice.Viewport.Height / tileHeight;
@@ -184,33 +184,47 @@ namespace DAlgorithms.Classes.World
         /// </summary>
         public void LoadTowers()
         {
-            int offsetX = 50;
-            int windowHeight = GraphicsDevice.Viewport.Height;
-            int windowWidth = GraphicsDevice.Viewport.Width;
+            //int offsetX = 50;
+            //int windowHeight = GraphicsDevice.Viewport.Height;
+            //int windowWidth = GraphicsDevice.Viewport.Width;
 
-            Vector2 icePosition = new Vector2(offsetX, (windowHeight - iceTowerTexture.Height) / 2);
-            Vector2 stormPosition = new Vector2(windowWidth - stormTowerTexture.Width - offsetX, (windowHeight - stormTowerTexture.Height) / 2);
+            Vector2 stormTowerPosition = new Vector2(GraphicsDevice.Viewport.Width / 2, 50);
+            Vector2 iceTowerPosition = new Vector2(GraphicsDevice.Viewport.Width - 100, GraphicsDevice.Viewport.Height / 2);
 
-            iceTower = new Tower(TowerType.Ice, icePosition, iceTowerTexture);
-            stormTower = new Tower(TowerType.Storm, stormPosition, stormTowerTexture);
+            stormTower = new Tower(TowerType.Storm, stormTowerPosition, stormTowerTexture);
+            iceTower = new Tower(TowerType.Ice, iceTowerPosition, iceTowerTexture);
+
         }
 
         public void LoadKeys()
         {
             //Keys placering
 
-            //keys.Add(iceKey);
-            //keys.Add(stormKey);
+            Random random = new Random();
+            Vector2 iceKeyPosition = new Vector2(random.Next(100, GraphicsDevice.Viewport.Width - 200),
+                                                 random.Next(100, GraphicsDevice.Viewport.Height - 200));
+
+            Vector2 stormKeyPosition = new Vector2(random.Next(100, GraphicsDevice.Viewport.Width - 200),
+                                                   random.Next(100, GraphicsDevice.Viewport.Height - 200));
+
+            iceKey = new Key(TowerType.Ice, iceKeyPosition, iceTowerKeyTexture);
+            stormKey = new Key(TowerType.Storm, stormKeyPosition, stormTowerKeyTexture);
+
+            keys.Add(iceKey);
+            keys.Add(stormKey);
+
         }
 
         public void LoadPortal()
         {
-            //Portals placering
+            Vector2 portalPosition = new Vector2(50, GraphicsDevice.Viewport.Height - 100);
+            portal = new Portal(portalPosition, portalTexture);
         }
 
         public void LoadWizard()
         {
-            //Wizard start placering
+            Vector2 wizardPosition = portal.Position;
+            wizard = new Wizard(wizardIdleTexture, wizardRunningTexture, wizardPosition);
         }
 
         /// <summary>
@@ -236,8 +250,8 @@ namespace DAlgorithms.Classes.World
             }
             */
 
-            //portal.Update(gameTime);
-            //wizard.Update(gameTime);
+            portal.Update(gameTime);
+            wizard.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -252,10 +266,7 @@ namespace DAlgorithms.Classes.World
             _spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
 
             // Tegn tilemap
-            tileMap.Draw(_spriteBatch, 0.0f);
-
-            // Tegn portal
-            //portal.Draw(_spriteBatch, 0.3f);
+            tileMap.Draw(_spriteBatch, 0.0f);            
 
             // Tegn towers
             iceTower.Draw(_spriteBatch, 0.3f);
@@ -263,12 +274,12 @@ namespace DAlgorithms.Classes.World
 
             //Tegn Keys
 
-            /*
+            
             foreach (Key key in keys)
             {
                 key.Draw(_spriteBatch, 0.3f);
             }
-            */
+            
 
             // Tegn knapper
             foreach (Button btn in buttons)
@@ -276,8 +287,11 @@ namespace DAlgorithms.Classes.World
                 btn.Draw(_spriteBatch, 1.0f);
             }
 
+            // Tegn portal
+            portal.Draw(_spriteBatch, 0.4f);
+
             // Tegn wizard
-            //wizard.Draw(_spriteBatch, 0.5f);
+            wizard.Draw(_spriteBatch, 0.5f);
 
             _spriteBatch.End();
 

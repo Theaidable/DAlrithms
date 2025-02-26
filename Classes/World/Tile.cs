@@ -75,7 +75,7 @@ namespace DAlgorithms.Classes.World
         /// <param name="layerDepth">Lagdybden, der bestemmer, hvor tile'en placeres i forhold til andre objekter (lavere værdi vises forrest).</param>
         public void Draw(SpriteBatch spriteBatch, float layerDepth)
         {
-            spriteBatch.Draw(Texture, Position, sourceRectangle, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, layerDepth);
+            spriteBatch.Draw(Texture, Position, sourceRectangle, Color.White, 0f, Vector2.Zero, 5f, SpriteEffects.None, layerDepth);
         }
     }
 }
