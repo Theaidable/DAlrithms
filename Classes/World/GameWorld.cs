@@ -6,9 +6,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using SharpDX.Direct2D1.Effects;
 using System;
-using System.Reflection.Metadata;
 
 namespace DAlgorithms.Classes.World
 {
@@ -43,6 +41,7 @@ namespace DAlgorithms.Classes.World
         private Texture2D restartIcon;
         private Texture2D aStarIcon;
         private Texture2D dfsIcon;
+        private Texture2D treeTexture;
         private Texture2D iceTowerTexture;
         private Texture2D stormTowerTexture;
         private Texture2D[] iceTowerKeyTexture = new Texture2D[5];
@@ -54,10 +53,39 @@ namespace DAlgorithms.Classes.World
         //Lists
         private List<Button> buttons = new List<Button>();
         private List<Key> keys = new List<Key>();
+        private List<Tree> trees = new List<Tree>();
 
-
+        //Map
         public int tileWidth = 80;
         public int tileHeight = 80;
+        public char[,] layout = new char[,]
+        {
+            {'G','G','G','G','G','G','G','G','G','G','G','G','G','G' },
+            {'G','G','G','G','G','G','G','G','G','G','G','P','G','G' },
+            {'G','G','G','G','G','G','G','G','G','G','G','P','G','G' },
+            {'G','G','G','G','G','G','G','G','G','G','G','P','G','G' },
+            {'G','G','G','G','G','G','G','G','G','G','G','P','G','G' },
+            {'G','G','G','G','G','G','G','G','G','G','G','P','G','G' },
+            {'G','W','W','G','G','G','G','G','G','G','G','P','G','G' },
+            {'G','W','P','P','P','P','P','P','P','P','P','P','G','G' },
+            {'G','W','W','P','W','W','W','W','W','W','F','M','F','G' },
+            {'G','G','G','P','W','W','W','W','W','W','F','M','F','G' },
+            {'G','G','G','P','W','W','W','W','W','W','F','M','F','G' },
+            {'G','G','G','P','W','W','W','W','W','W','F','M','F','G' },
+            {'G','G','G','P','W','W','W','W','W','W','F','M','F','G' },
+            {'G','G','G','P','W','W','W','W','W','W','F','M','F','G' },
+            {'G','G','G','P','W','W','W','W','W','W','F','M','F','G' },
+            {'G','G','G','P','W','W','W','W','W','W','F','M','F','G' },
+            {'G','G','G','P','W','W','W','W','W','W','F','M','F','G' },
+            {'G','G','G','P','W','W','W','W','W','W','F','M','F','G' },
+            {'G','G','G','P','P','P','P','P','P','P','P','P','G','G' },
+            {'G','G','G','G','G','G','G','G','G','G','G','G','G','G' },
+            {'G','G','G','G','G','G','G','G','G','G','G','G','G','G' },
+            {'G','G','G','G','G','G','G','G','G','G','G','G','G','G' },
+            {'G','G','G','G','G','G','G','G','G','G','G','G','G','G' },
+            {'G','G','G','G','G','G','G','G','G','G','G','G','G','G' },
+            {'G','G','G','G','G','G','G','G','G','G','G','G','G','G' },
+        };
 
         /// <summary>
         /// GameWorld konstruktør, sætter isMouseVisible = true.
@@ -89,6 +117,7 @@ namespace DAlgorithms.Classes.World
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             LoadTextures();
             LoadTileMap();
+            LoadTrees();
             LoadButtons();
             LoadTowers();
             LoadKeys();
@@ -107,6 +136,9 @@ namespace DAlgorithms.Classes.World
             restartIcon = Content.Load<Texture2D>("Assets/Icons/refresh");
             aStarIcon = Content.Load<Texture2D>("Assets/Icons/Star");
             dfsIcon = Content.Load<Texture2D>("Assets/Icons/Fruit");
+
+            //Tree
+            treeTexture = Content.Load<Texture2D>("Assets/Tree/Tree");
 
             //Towers
             iceTowerTexture = Content.Load<Texture2D>("Assets/Tower/IceTower");
@@ -142,15 +174,55 @@ namespace DAlgorithms.Classes.World
         }
 
         /// <summary>
+        /// Sætter bogstaverne til deres bestemte TileType
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns></returns>
+        private TileType CharToTileType(char c)
+        {
+            switch (c)
+            {
+                case 'G': return TileType.Grass;
+                case 'W': return TileType.Wall;
+                case 'P': return TileType.Path;
+                case 'F': return TileType.Forest;
+                case 'M': return TileType.Monster;
+                default: return TileType.Grass; // fallback
+            }
+        }
+
+        /// <summary>
         /// Opretter tilemap'et baseret på de angivne dimensioner og tile teksturen.
         /// </summary>
         public void LoadTileMap()
         {
 
-            int mapWidth = GraphicsDevice.Viewport.Width / tileWidth;
-            int mapHeight = GraphicsDevice.Viewport.Height / tileHeight;
+            tileMap = new TileMap(layout.GetLength(0), layout.GetLength(1), tileWidth, tileHeight, tileTexture);
 
-            tileMap = new TileMap(mapWidth, mapHeight, tileWidth, tileHeight, tileTexture);
+            // Overskriv tile-typer i tileMap efter layout
+            for (int x = 0; x < layout.GetLength(0); x++)
+            {
+                for (int y = 0; y < layout.GetLength(1); y++)
+                {
+                    TileType type = CharToTileType(layout[x, y]);
+                    tileMap.SetTileType(x, y, type);
+                }
+            }
+        }
+
+        public void LoadTrees()
+        {
+            int startTileX = 8;
+            int treeTileY = 10;
+
+            for (int i = 0; i < 10; i++)
+            {
+                int currentTileX = startTileX + i;
+                float treeX = currentTileX * tileWidth + 10 - treeTexture.Width / 2;
+                float treeY = treeTileY * tileHeight - 40 - treeTexture.Height / 2;
+
+                trees.Add(new Tree(new Vector2(treeX, treeY), treeTexture));
+            }
         }
 
         public void LoadButtons()
@@ -277,10 +349,16 @@ namespace DAlgorithms.Classes.World
 
             _spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
 
-            // Tegn tilemap
-            tileMap.Draw(_spriteBatch, 0.0f);            
+            //Tegn tilemap
+            tileMap.Draw(_spriteBatch, 0.0f);
 
-            // Tegn towers
+            //Tegn Trees
+            foreach (Tree tree in trees)
+            {
+                tree.Draw(_spriteBatch, 0.3f);
+            }
+
+            //Tegn towers
             iceTower.Draw(_spriteBatch, 0.3f);
             stormTower.Draw(_spriteBatch, 0.3f);
 
@@ -290,13 +368,13 @@ namespace DAlgorithms.Classes.World
                 key.Draw(_spriteBatch, 0.3f);
             }
             
-            // Tegn knapper
+            //Tegn knapper
             foreach (Button btn in buttons)
             {
                 btn.Draw(_spriteBatch, 1.0f);
             }
 
-            // Tegn portal
+            //Tegn portal
             portal.Draw(_spriteBatch, 0.4f);
 
             // Tegn wizard

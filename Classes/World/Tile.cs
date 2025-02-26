@@ -50,27 +50,11 @@ namespace DAlgorithms.Classes.World
             Type = type;
             Texture = texture;
             this.sourceRectangle = sourceRectangle;
+        }
 
-            switch (type)
-            {
-                case TileType.Grass:
-                    this.sourceRectangle = new Rectangle(0, 0, 18, 18);
-                    break;
-                case TileType.Wall:
-                    this.sourceRectangle = new Rectangle(36, 0, 18, 18);
-                    IsWalkable = false;
-                    break;
-                case TileType.Path:
-                    this.sourceRectangle = new Rectangle(18, 0, 18, 18);
-                    break;
-                case TileType.Forest:
-                    this.sourceRectangle = new Rectangle(18, 0, 18, 18);
-                    break;
-                case TileType.Monster:
-                    this.sourceRectangle = new Rectangle(18, 0, 18, 18);
-                    IsWalkable = false;
-                    break;
-            }
+        public void SetSourceRectangle(int sourceX, int sourceY, int width, int height)
+        {
+            sourceRectangle = new Rectangle(sourceX, sourceY, width, height);
         }
 
         /// <summary>

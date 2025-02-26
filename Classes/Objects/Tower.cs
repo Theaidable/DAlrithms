@@ -40,8 +40,8 @@ namespace DAlgorithms.Classes.Objects
         public void Draw(SpriteBatch spriteBatch, float layerDepth)
         {
             float scale = 90f / Texture.Width;
-            spriteBatch.Draw(Texture, Position, null, Color.White, 0f,
-                             Vector2.Zero, scale, SpriteEffects.None, layerDepth);
+
+            spriteBatch.Draw(Texture, Position, null, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, layerDepth);
         }
     }
 }
