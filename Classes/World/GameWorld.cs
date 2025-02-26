@@ -220,7 +220,7 @@ namespace DAlgorithms.Classes.World
         public void LoadPortal()
         {
             int tileX = 1;  // Tile-koordinat for portalen
-            int tileY = 11;  // Eksempelværdi - justér efter behov
+            int tileY = 11;  // Justér efter behov
 
             float xPos = tileX * 80 + 35 - portalTexture[0].Width / 2;
             float yPos = tileY * 80 + 40 - portalTexture[0].Height / 2;
