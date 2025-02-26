@@ -130,7 +130,7 @@ namespace DAlgorithms.Classes.UI
         public void Draw(SpriteBatch spriteBatch, float layerDepth)
         {
             Texture2D textureToDraw = (IsPressed && PressedTexture != null) ? PressedTexture : Texture;
-            spriteBatch.Draw(textureToDraw, Position, null, Tint, 0f, Vector2.Zero, 2.1f, SpriteEffects.None, 0.1f);
+            spriteBatch.Draw(textureToDraw, Position, null, Tint, 0f, Vector2.Zero, 1.2f, SpriteEffects.None, 0.1f);
 
             if (Icon != null)
             {

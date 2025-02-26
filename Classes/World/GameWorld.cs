@@ -53,7 +53,14 @@ namespace DAlgorithms.Classes.World
 
         //Lists
         private List<Button> buttons = new List<Button>();
-        private List<Key> keys = new List<Key>(); 
+        private List<Key> keys = new List<Key>();
+
+        /// <summary>
+        /// Grid
+        /// </summary>
+        private int tileCount = 10;
+
+        private int tileSize = 100;
 
         /// <summary>
         /// GameWorld konstruktør, sætter isMouseVisible = true.
@@ -70,8 +77,8 @@ namespace DAlgorithms.Classes.World
         /// </summary>
         protected override void Initialize()
         {
-            _graphics.PreferredBackBufferWidth = 1920;
-            _graphics.PreferredBackBufferHeight = 1080;
+            _graphics.PreferredBackBufferWidth = tileCount * tileSize + 200;
+            _graphics.PreferredBackBufferHeight = tileCount * tileSize + 10;
             _graphics.ApplyChanges();
 
             base.Initialize();
@@ -153,21 +160,21 @@ namespace DAlgorithms.Classes.World
 
         public void LoadButtons()
         {
-            Button btnRestartGame = new Button(buttonTexture, new Vector2(50, 10))
+            Button btnRestartGame = new Button(buttonTexture, new Vector2(10, 10))
             {
                 Icon = restartIcon,
                 IconSourceRect = new Rectangle(0, 0, 150, 150), //Skal muligvis slettes
                 PressedTexture = pressedButtonTexture,
             };
 
-            Button btnAStar = new Button(buttonTexture, new Vector2(btnRestartGame.Position.X + btnRestartGame.Texture.Width + 75, 10))
+            Button btnAStar = new Button(buttonTexture, new Vector2(btnRestartGame.Position.X + btnRestartGame.Texture.Width + 10, 10))
             {
                 Icon = aStarIcon,
                 IconSourceRect = new Rectangle(0, 0, 150, 150), //Skal muligvis slettes
                 PressedTexture = pressedButtonTexture,
             };
 
-            Button btnDFS = new Button(buttonTexture, new Vector2(btnAStar.Position.X + btnAStar.Texture.Width + 75, 10))
+            Button btnDFS = new Button(buttonTexture, new Vector2(btnAStar.Position.X + btnAStar.Texture.Width + 10, 10))
             {
                 Icon = dfsIcon,
                 IconSourceRect = new Rectangle(0, 0, 150, 150), //Skal muligvis slettes
