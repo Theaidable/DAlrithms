@@ -39,7 +39,9 @@ namespace DAlgorithms.Classes.Objects
         /// <param name="layerDepth"></param>
         public void Draw(SpriteBatch spriteBatch, float layerDepth)
         {
-            spriteBatch.Draw(Texture, Position, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, layerDepth);
+            float scale = 90f / Texture.Width;
+            spriteBatch.Draw(Texture, Position, null, Color.White, 0f,
+                             Vector2.Zero, scale, SpriteEffects.None, layerDepth);
         }
     }
 }
