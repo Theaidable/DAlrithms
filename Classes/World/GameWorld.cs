@@ -55,12 +55,9 @@ namespace DAlgorithms.Classes.World
         private List<Button> buttons = new List<Button>();
         private List<Key> keys = new List<Key>();
 
-        /// <summary>
-        /// Grid
-        /// </summary>
-        private int tileCount = 10;
 
-        private int tileSize = 100;
+        public int tileWidth = 80;
+        public int tileHeight = 80;
 
         /// <summary>
         /// GameWorld konstruktør, sætter isMouseVisible = true.
@@ -77,8 +74,8 @@ namespace DAlgorithms.Classes.World
         /// </summary>
         protected override void Initialize()
         {
-            _graphics.PreferredBackBufferWidth = tileCount * tileSize + 200;
-            _graphics.PreferredBackBufferHeight = tileCount * tileSize + 10;
+            _graphics.PreferredBackBufferWidth = tileWidth * 25;
+            _graphics.PreferredBackBufferHeight = tileHeight * 14;
             _graphics.ApplyChanges();
 
             base.Initialize();
@@ -149,8 +146,6 @@ namespace DAlgorithms.Classes.World
         /// </summary>
         public void LoadTileMap()
         {
-            int tileWidth = 80;
-            int tileHeight = 80;
 
             int mapWidth = GraphicsDevice.Viewport.Width / tileWidth;
             int mapHeight = GraphicsDevice.Viewport.Height / tileHeight;
@@ -190,7 +185,7 @@ namespace DAlgorithms.Classes.World
         {
             int stormTileX = 7; // Justér efter hvor vi vil have dem
             int stormTileY = 2;
-            int iceTileX = 22;
+            int iceTileX = 18;
             int iceTileY = 9;
 
             float stormX = stormTileX * 80 + 17 - stormTowerTexture.Width / 2;
