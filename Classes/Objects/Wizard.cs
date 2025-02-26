@@ -55,24 +55,30 @@ namespace DAlgorithms.Classes.Objects
 
         public void Draw(SpriteBatch spriteBatch, float layerDepth)
         {
-            Texture2D currentFrame = null;
+            //Texture2D currentFrame = null;
 
-            // Vælg frame alt efter state
-            switch (CurrentState)
-            {
-                case WizardState.Idle:
-                    currentFrame = idleFrames[animationIndex];
-                    break;
-                case WizardState.Running:
-                    currentFrame = runFrames[animationIndex];
-                    break;
-            }
+            //// Vælg frame alt efter state
+            //switch (CurrentState)
+            //{
+            //    case WizardState.Idle:
+            //        currentFrame = idleFrames[animationIndex];
+            //        break;
+            //    case WizardState.Running:
+            //        currentFrame = runFrames[animationIndex];
+            //        break;
+            //}
 
-            if (currentFrame != null)
-            {
-                spriteBatch.Draw(currentFrame, Position, null, Color.White, 0f,
-                                 Vector2.Zero, 1f, SpriteEffects.None, layerDepth);
-            }
+            //if (currentFrame != null)
+            //{
+            //    spriteBatch.Draw(currentFrame, Position, null, Color.White, 0f,
+            //                     Vector2.Zero, 1f, SpriteEffects.None, layerDepth);
+            //}
+            
+            float scale = 100f / idleFrames[0].Width;
+            Texture2D currentFrame = CurrentState == WizardState.Idle ? idleFrames[animationIndex] : runFrames[animationIndex];
+
+            spriteBatch.Draw(currentFrame, Position, null, Color.White, 0f,
+                             Vector2.Zero, scale, SpriteEffects.None, layerDepth);
         }
 
         public void MoveTo(Vector2 newPosition)

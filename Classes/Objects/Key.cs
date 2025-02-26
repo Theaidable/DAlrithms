@@ -41,7 +41,9 @@ namespace DAlgorithms.Classes.Objects
         {
             if (!IsCollected && keyTexture != null)
             {
-                spriteBatch.Draw(keyTexture[animationIndex], Position, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, layerDepth);
+                float scale = 15f / keyTexture[animationIndex].Width;
+                spriteBatch.Draw(keyTexture[animationIndex], Position, null, Color.White, 0f,
+                                 Vector2.Zero, scale, SpriteEffects.None, layerDepth);
             }
         }
     }

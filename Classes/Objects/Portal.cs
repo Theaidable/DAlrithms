@@ -48,7 +48,9 @@ namespace DAlgorithms.Classes.Objects
         /// <param name="layerDepth">Lagdybden for tegningen.</param>
         public void Draw(SpriteBatch spriteBatch, float layerDepth)
         {
-            spriteBatch.Draw(portalTexture[animationIndex], Position, Color.White);
+            float scale = 80f / portalTexture[animationIndex].Width; // Dynamisk skalering
+            spriteBatch.Draw(portalTexture[animationIndex], Position, null, Color.White, 0f,
+                             Vector2.Zero, scale, SpriteEffects.None, layerDepth);
         }
     }
 }

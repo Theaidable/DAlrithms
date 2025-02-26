@@ -184,15 +184,18 @@ namespace DAlgorithms.Classes.World
         /// </summary>
         public void LoadTowers()
         {
-            //int offsetX = 50;
-            //int windowHeight = GraphicsDevice.Viewport.Height;
-            //int windowWidth = GraphicsDevice.Viewport.Width;
+            int stormTileX = 7; // Justér efter hvor vi vil have dem
+            int stormTileY = 2;
+            int iceTileX = 22;
+            int iceTileY = 9;
 
-            Vector2 stormTowerPosition = new Vector2(GraphicsDevice.Viewport.Width / 2, 50);
-            Vector2 iceTowerPosition = new Vector2(GraphicsDevice.Viewport.Width - 100, GraphicsDevice.Viewport.Height / 2);
+            float stormX = stormTileX * 80 + 17 - stormTowerTexture.Width / 2;
+            float stormY = stormTileY * 80 + 2 - stormTowerTexture.Height / 2;
+            float iceX = iceTileX * 80 + 17 - iceTowerTexture.Width / 2;
+            float iceY = iceTileY * 80 + 2 - iceTowerTexture.Height / 2;
 
-            stormTower = new Tower(TowerType.Storm, stormTowerPosition, stormTowerTexture);
-            iceTower = new Tower(TowerType.Ice, iceTowerPosition, iceTowerTexture);
+            stormTower = new Tower(TowerType.Storm, new Vector2(stormX, stormY), stormTowerTexture);
+            iceTower = new Tower(TowerType.Ice, new Vector2(iceX, iceY), iceTowerTexture);
 
         }
 
@@ -201,14 +204,14 @@ namespace DAlgorithms.Classes.World
             //Keys placering
 
             Random random = new Random();
-            Vector2 iceKeyPosition = new Vector2(random.Next(100, GraphicsDevice.Viewport.Width - 200),
-                                                 random.Next(100, GraphicsDevice.Viewport.Height - 200));
+            int keyTileX = random.Next(1, 10);
+            int keyTileY = random.Next(1, 6);
 
-            Vector2 stormKeyPosition = new Vector2(random.Next(100, GraphicsDevice.Viewport.Width - 200),
-                                                   random.Next(100, GraphicsDevice.Viewport.Height - 200));
+            float keyX = keyTileX * 80 + 45 - iceTowerKeyTexture[0].Width / 2;
+            float keyY = keyTileY * 80 + 40 - iceTowerKeyTexture[0].Height / 2;
 
-            iceKey = new Key(TowerType.Ice, iceKeyPosition, iceTowerKeyTexture);
-            stormKey = new Key(TowerType.Storm, stormKeyPosition, stormTowerKeyTexture);
+            iceKey = new Key(TowerType.Ice, new Vector2(keyX, keyY), iceTowerKeyTexture);
+            stormKey = new Key(TowerType.Storm, new Vector2(keyX + 160, keyY + 160), stormTowerKeyTexture);
 
             keys.Add(iceKey);
             keys.Add(stormKey);
@@ -217,13 +220,25 @@ namespace DAlgorithms.Classes.World
 
         public void LoadPortal()
         {
-            Vector2 portalPosition = new Vector2(50, GraphicsDevice.Viewport.Height - 100);
+            int tileX = 1;  // Tile-koordinat for portalen
+            int tileY = 11;  // Eksempelværdi - justér efter behov
+
+            float xPos = tileX * 80 + 35 - portalTexture[0].Width / 2;
+            float yPos = tileY * 80 + 40 - portalTexture[0].Height / 2;
+
+            Vector2 portalPosition = new Vector2(xPos, yPos);
             portal = new Portal(portalPosition, portalTexture);
         }
 
         public void LoadWizard()
         {
-            Vector2 wizardPosition = portal.Position;
+            int tileX = 2;
+            int tileY = 11;
+
+            float xPos = tileX * 80 + 10 - wizardIdleTexture[0].Width / 2;
+            float yPos = tileY * 80 - 10 - wizardIdleTexture[0].Height / 2;
+
+            Vector2 wizardPosition = new Vector2(xPos, yPos);
             wizard = new Wizard(wizardIdleTexture, wizardRunningTexture, wizardPosition);
         }
 
@@ -242,13 +257,11 @@ namespace DAlgorithms.Classes.World
                 btn.Update(gameTime);
             }
 
-            // Opdater keys
-            /*
+            // Opdater keys            
             foreach (Key key in keys)
             {
                 key.Update(gameTime);
             }
-            */
 
             portal.Update(gameTime);
             wizard.Update(gameTime);
@@ -272,15 +285,12 @@ namespace DAlgorithms.Classes.World
             iceTower.Draw(_spriteBatch, 0.3f);
             stormTower.Draw(_spriteBatch, 0.3f);
 
-            //Tegn Keys
-
-            
+            //Tegn Keys            
             foreach (Key key in keys)
             {
                 key.Draw(_spriteBatch, 0.3f);
             }
             
-
             // Tegn knapper
             foreach (Button btn in buttons)
             {
