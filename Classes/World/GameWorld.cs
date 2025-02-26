@@ -107,9 +107,9 @@ namespace DAlgorithms.Classes.World
             //Buttons
             buttonTexture = Content.Load<Texture2D>("Assets/Buttons/Button_Blue");
             pressedButtonTexture = Content.Load<Texture2D>("Assets/Buttons/Button_Blue_Pressed");
-            //restartIcon = content.Load<Texture2D>("Assets/Buttons/restartIcon");
-            //aStarIcon = content.Load<Texture2D>("Assets/Buttons/aStarIcon");
-            //TdfsIcon = content.Load<Texture2D>("Assets/Buttons/dfsIcon");
+            restartIcon = Content.Load<Texture2D>("Assets/Icons/refresh");
+            aStarIcon = Content.Load<Texture2D>("Assets/Icons/Star");
+            dfsIcon = Content.Load<Texture2D>("Assets/Icons/Fruit");
 
             //Towers
             iceTowerTexture = Content.Load<Texture2D>("Assets/Tower/IceTower");
@@ -163,21 +163,18 @@ namespace DAlgorithms.Classes.World
             Button btnRestartGame = new Button(buttonTexture, new Vector2(10, 10))
             {
                 Icon = restartIcon,
-                IconSourceRect = new Rectangle(0, 0, 150, 150), //Skal muligvis slettes
                 PressedTexture = pressedButtonTexture,
             };
 
             Button btnAStar = new Button(buttonTexture, new Vector2(btnRestartGame.Position.X + btnRestartGame.Texture.Width + 10, 10))
             {
                 Icon = aStarIcon,
-                IconSourceRect = new Rectangle(0, 0, 150, 150), //Skal muligvis slettes
                 PressedTexture = pressedButtonTexture,
             };
 
             Button btnDFS = new Button(buttonTexture, new Vector2(btnAStar.Position.X + btnAStar.Texture.Width + 10, 10))
             {
                 Icon = dfsIcon,
-                IconSourceRect = new Rectangle(0, 0, 150, 150), //Skal muligvis slettes
                 PressedTexture = pressedButtonTexture,
             };
 

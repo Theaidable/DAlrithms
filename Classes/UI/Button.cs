@@ -22,47 +22,58 @@ namespace DAlgorithms.Classes.UI
         /// Teksturen for knappen i normal tilstand.
         /// </summary>
         public Texture2D Texture { get; set; }
+
         /// <summary>
         /// Teksturen for knappen, når den er trykket.
         /// </summary>
         public Texture2D PressedTexture { get; set; }
+
         /// <summary>
         /// Ikonet, der vises på knappen.
         /// </summary>
         public Texture2D Icon { get; set; }
+
         /// <summary>
         /// Positionen (øverste venstre hjørne) for knappen.
         /// </summary>
         public Vector2 Position { get; set; }
+
         /// <summary>
         /// Den klikbare område for knappen. Her antages en skalering på 2.
         /// (Bemærk: hvis du ændrer skaleringen i Draw, bør denne også justeres.)
         /// </summary>
-        public Rectangle Bounds => new Rectangle((int)Position.X, (int)Position.Y, (int)Texture.Width * 2, (int)Texture.Height * 2);
+        public Rectangle Bounds => new Rectangle((int)Position.X, (int)Position.Y, (int)Texture.Width, (int)Texture.Height);
         /// <summary>
         /// Teksten, der vises på knappen.
         /// </summary>
+        /// 
         public string Text { get; set; }
+
         /// <summary>
         /// Den SpriteFont, der bruges til at tegne teksten.
         /// </summary>
         public SpriteFont Font { get; set; }
+
         /// <summary>
         /// Tint-farven for knappen (standard: hvid).
         /// </summary>
         public Color Tint { get; set; } = Color.White;
+
         /// <summary>
         /// Indikerer om musen er over knappen.
         /// </summary>
         public bool IsHovering { get; private set; }
+
         /// <summary>
         /// Indikerer om knappen er trykket.
         /// </summary>
         public bool IsPressed { get; private set; }
+
         /// <summary>
         /// Source rectangle for ikonet, der gør det muligt at "cutte" en del ud af ikonet.
         /// </summary>
         public Rectangle IconSourceRect { get; set; } = Rectangle.Empty;
+
         /// <summary>
         /// Event, der udløses, når knappen klikkes.
         /// </summary>
@@ -75,9 +86,6 @@ namespace DAlgorithms.Classes.UI
         private MouseState previousMouse;
         public Texture2D ButtonTexture { get; set; }
         public Texture2D PressedButtonTexture { get; set; }
-        private Texture2D restartIcon;
-        private Texture2D aStarIcon;
-        private Texture2D dfsIcon;
 
         /// <summary>
         /// Konstruerer en ny Button med den angivne tekstur og position.
@@ -136,16 +144,9 @@ namespace DAlgorithms.Classes.UI
             {
                 Rectangle sourceRect = IconSourceRect != Rectangle.Empty ? IconSourceRect : new Rectangle(0, 0, Icon.Width, Icon.Height);
                 Vector2 iconPosition = Position + new Vector2((Texture.Width - sourceRect.Width) / 2, (Texture.Height - sourceRect.Height) / 2);
-                Vector2 iconOffset = new Vector2(10, 0);
+                Vector2 iconOffset = new Vector2(5, -2);
                 iconPosition += iconOffset;
-                spriteBatch.Draw(Icon, iconPosition, sourceRect, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.00f);
-            }
-
-            if (!string.IsNullOrEmpty(Text) && Font != null)
-            {
-                Vector2 textSize = Font.MeasureString(Text);
-                Vector2 textPosition = Position + new Vector2((Texture.Width - textSize.X) / 2, (Texture.Height - textSize.Y) / 2);
-                spriteBatch.DrawString(Font, Text, textPosition, Color.Black, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.00f);
+                spriteBatch.Draw(Icon, iconPosition, sourceRect, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1.0f);
             }
         }
     }
