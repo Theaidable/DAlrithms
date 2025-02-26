@@ -53,8 +53,37 @@ namespace DAlgorithms.Classes.World
 
                     // Opret en ny tile af typen Grass
                     tiles[x, y] = new Tile(position, tileWidth, tileHeight, TileType.Grass, tileTexture, sourceRectangle);
-
                 }
+            }
+        }
+        public void SetTileType(int x, int y, TileType newType)
+        {
+            Tile oldTile = tiles[x, y];
+            oldTile.Type = newType;
+
+            switch (newType)
+            {
+                case TileType.Grass:
+                    oldTile.IsWalkable = true;
+                    oldTile.SetSourceRectangle(0, 0, 18, 18);
+                    break;
+                case TileType.Wall:
+                    oldTile.IsWalkable = false;
+                    oldTile.SetSourceRectangle(36, 0, 18, 18);
+                    break;
+                case TileType.Path:
+                    oldTile.IsWalkable = true;
+                    oldTile.SetSourceRectangle(18, 0, 18, 18);
+                    break;
+                case TileType.Forest:
+                    oldTile.IsWalkable = false;
+                    oldTile.SetSourceRectangle(0, 0, 18, 18);
+                    break;
+                case TileType.Monster:
+                    oldTile.IsWalkable = true; // Start walkable, 
+                                               // Wizard can pass once, then set false
+                    oldTile.SetSourceRectangle(18, 0, 18, 18);
+                    break;
             }
         }
 
