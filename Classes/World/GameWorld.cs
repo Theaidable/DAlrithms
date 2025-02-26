@@ -151,6 +151,7 @@ namespace DAlgorithms.Classes.World
             int mapHeight = GraphicsDevice.Viewport.Height / tileHeight;
 
             tileMap = new TileMap(mapWidth, mapHeight, tileWidth, tileHeight, tileTexture);
+            tileMap.LoadMapFromFile("Content/Map.txt");
         }
 
         public void LoadButtons()

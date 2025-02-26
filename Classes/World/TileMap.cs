@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.IO;
 
 namespace DAlgorithms.Classes.World
 {
@@ -54,6 +55,45 @@ namespace DAlgorithms.Classes.World
                     // Opret en ny tile af typen Grass
                     tiles[x, y] = new Tile(position, tileWidth, tileHeight, TileType.Grass, tileTexture, sourceRectangle);
 
+                }
+            }
+        }
+
+        private Rectangle GetTileSourceRectangle(TileType type)
+        {
+            switch (type)
+            {
+                case TileType.Grass:
+                    return new Rectangle(0, 0, tileWidth, tileHeight);
+                case TileType.Wall:
+                    return new Rectangle(80, 0, tileWidth, tileHeight);
+                case TileType.Path:
+                    return new Rectangle(160, 0, tileWidth, tileHeight);
+                case TileType.Forest:
+                    return new Rectangle(240, 0, tileWidth, tileHeight);
+                case TileType.Monster:
+                    return new Rectangle(320, 0, tileWidth, tileHeight);
+                default:
+                    return new Rectangle(0, 0, tileWidth, tileHeight);
+            }
+        }
+
+        public void LoadMapFromFile(string filePath)
+        {
+            string[] lines = File.ReadAllLines(filePath);
+            tiles = new Tile[mapWidth, mapHeight];
+
+            for (int y = 0; y < lines.Length; y++)
+            {
+                string[] values = lines[y].Split(' ');
+
+                for (int x = 0; x < values.Length; x++)
+                {
+                    int tileTypeValue = int.Parse(values[x]);
+                    TileType tileType = (TileType)tileTypeValue; // Konverter til enum
+
+                    Vector2 position = new Vector2(x * tileWidth, y * tileHeight);
+                    tiles[x, y] = new Tile(position, tileWidth, tileHeight, tileType, tileTexture, GetTileSourceRectangle(tileType));
                 }
             }
         }

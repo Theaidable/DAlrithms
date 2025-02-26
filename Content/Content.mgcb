@@ -565,3 +565,8 @@
 /processorParam:TextureFormat=Color
 /build:Assets/Wizard/Wizard.png
 
+#begin Map.txt
+/importer:
+/processor:
+/build:Map.txt
+
