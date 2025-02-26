@@ -13,7 +13,8 @@ namespace DAlgorithms.Classes.World
         Grass,
         Wall,
         Path,
-        Forest
+        Forest,
+        Monster
     }
 
     /// <summary>
@@ -64,6 +65,10 @@ namespace DAlgorithms.Classes.World
                     break;
                 case TileType.Forest:
                     this.sourceRectangle = new Rectangle(18, 0, 18, 18);
+                    break;
+                case TileType.Monster:
+                    this.sourceRectangle = new Rectangle(18, 0, 18, 18);
+                    IsWalkable = false;
                     break;
             }
         }
