@@ -145,35 +145,50 @@ namespace DAlgorithms.Classes.World
                     break;
             }
         }
-
-        public List<Vector2> GetWalkableTilesBetween(Vector2 start, Vector2 end)
+        public List<Tile> GetWalkableTilesBetween(Vector2 start, Vector2 end)
         {
-            List<Vector2> pathTiles = new List<Vector2>();
+            List<Tile> pathTiles = new List<Tile>();
 
             Vector2 direction = end - start;
+            if (direction.Length() == 0)
+            {
+                Debug.WriteLine($"Samme start og slut tile: {start} → {end}");
+                return pathTiles;
+            }
             direction.Normalize();
 
             Vector2 currentPos = start;
 
-            while (Vector2.Distance(currentPos, end) > tileWidth / 2)
+            Debug.WriteLine($"Finder walkable tiles mellem {start} → {end}");
+
+            while (Vector2.Distance(currentPos, end) > 1f)
             {
                 currentPos += direction * tileWidth;
 
-                // Find tile koordinater
-                int tileX = (int)(currentPos.X / tileWidth);
-                int tileY = (int)(currentPos.Y / tileHeight);
+                int tileX = (int)(currentPos.X);
+                int tileY = (int)(currentPos.Y);
 
-                if (tileX < 0 || tileX >= tiles.GetLength(0) || tileY < 0 || tileY >= tiles.GetLength(1))
-                    break; // Hvis vi går uden for mappet
-
-                if (tiles[tileX, tileY].IsWalkable)
+                if (tileX < 0 || tileX >= mapWidth || tileY < 0 || tileY >= mapHeight)
                 {
-                    pathTiles.Add(new Vector2(tileX * tileWidth, tileY * tileHeight));
+                    Debug.WriteLine($"Tile uden for kortet: {tileX}, {tileY}");
+                    break;
+                }
+
+                Tile tile = GetTile(tileX, tileY);
+                if (tile.IsWalkable)
+                {
+                    Debug.WriteLine($"Walkable tile: {tileX}, {tileY}");
+                    pathTiles.Add(tile);
+                }
+                else
+                {
+                    Debug.WriteLine($"Ikke-walkable tile: {tileX}, {tileY}");
                 }
             }
 
             return pathTiles;
         }
+
 
 
         /// <summary>

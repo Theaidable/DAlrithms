@@ -66,7 +66,7 @@ namespace DAlgorithms.Classes.World
         private Graph<string> graph;
         private Dictionary<string, Point> nodePositions = new Dictionary<string, Point>()
         {
-            {"Start", new Point(11,2) },
+            {"Start", Point.Zero },
             {"StormKey", Point.Zero },
             {"IceKey", Point.Zero},
             {"StormTower", new Point(2,7) },
@@ -143,6 +143,8 @@ namespace DAlgorithms.Classes.World
             LoadKeys();
             LoadPortal();
             LoadWizard();
+
+            Debug.WriteLine($"Før RunDFS: Start = ({nodePositions["Start"].X}, {nodePositions["Start"].Y})");
 
             btnRestartGame.Click += OnRestartGame_Click;
             btnAStar.Click += OnAStar_Click;
@@ -385,6 +387,9 @@ namespace DAlgorithms.Classes.World
 
             Vector2 wizardPosition = new Vector2(xPos, yPos);
             wizard = new Wizard(wizardIdleTexture, wizardRunningTexture, wizardPosition, tileMap, this);
+            nodePositions["Start"] = new Point(tileX, tileY);
+            Debug.WriteLine($"Sat Start = ({nodePositions["Start"].X}, {nodePositions["Start"].Y})");
+
         }
 
         /// <summary>
@@ -540,59 +545,32 @@ namespace DAlgorithms.Classes.World
                 Debug.WriteLine("Ingen node-sti fundet");
                 return;
             }
-            else
+
+            Debug.WriteLine("Path fundet:");
+            foreach (var node in path)
             {
-                Console.WriteLine("Path fundet:");
-                    foreach (var node in path)
-                {
-                    Debug.WriteLine(node.Data);
-                }
+                Debug.WriteLine($"NodeData: {node.Data}");
             }
 
-            wizard.pathPositions.Clear();
+            List<Tile> tilePath = new List<Tile>();
 
             for (int i = 0; i < path.Count - 1; i++)
             {
                 Point startNode = nodePositions[path[i].Data];
                 Point endNode = nodePositions[path[i + 1].Data];
 
-                Vector2 startTile = new Vector2(startNode.X * tileWidth, startNode.Y * tileHeight);
-                Vector2 endTile = new Vector2(endNode.X * tileWidth, endNode.Y * tileHeight);
+                Vector2 startTile = new Vector2(startNode.X / tileWidth, startNode.Y / tileHeight);
+                Vector2 endTile = new Vector2(endNode.X / tileWidth, endNode.Y / tileHeight);
 
-                List<Vector2> tilesBetween = tileMap.GetWalkableTilesBetween(startTile, endTile);
+                Debug.WriteLine($"startTile.X:{startTile.X} og startTile.Y:{startTile.Y}");
+                Debug.WriteLine($"endTile.X:{endTile.X} og endTile.Y:{endTile.Y}");
 
-                wizard.pathPositions.AddRange(tilesBetween);
+                List<Tile> tilesBetween = tileMap.GetWalkableTilesBetween(startTile, endTile);
+                tilePath.AddRange(tilesBetween);
             }
 
-            wizard.currentTargetIndex = 0;
-            wizard.CurrentState = WizardState.Running;
-
-
-            // Start bevægelse langs stien
-
-            //Når wizard rammer noden StormKey så sættes boolean HasStormKey til true
-
-            // Opdater tårn-tilstande hvis nødvendigt
-            if (wizard.HasStormKey)
-            {
-                tileMap.SetTileType(7, 2, TileType.OpenStormTower);
-                UpdateGraphBasedOnProximity(wizard);
-                List<Node<string>> newPath = graph.FindPathDFS("StormKey","Exit");
-            }
-
-            /*
-             * Når wizard rammer StormTower noden
-                wizard.HasPotion = true;
-                wizard.VisitedStormTower = true;
-
-            //Når wizard rammer node til IceKey så sættes boolean HasIceKey til true
-
-            if (wizard.HasIceKey && wizard.HasPotion)
-            {
-                Point iceTilePos = nodePositions["IceTower"];
-                tileMap.SetTileType(iceTilePos.X, iceTilePos.Y, TileType.OpenIceTower);
-            }
-                         */
+            // Start bevægelse langs den fundne sti
+            wizard.StartPathMovement(tilePath);
         }
     }
 }

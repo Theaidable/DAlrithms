@@ -37,12 +37,15 @@ namespace DAlgorithms.Classes.Objects
         private TileMap tileMap;
         private GameWorld gameWorld; // Reference til GameWorld for at kalde RunDFS()
 
-        public Wizard(Texture2D[] idleFrames, Texture2D[] runFrames, Vector2 position)
+        public Wizard(Texture2D[] idleFrames, Texture2D[] runFrames, Vector2 position, TileMap tileMap, GameWorld gameWorld)
         {
             this.idleFrames = idleFrames;
             this.runFrames = runFrames;
+            this.tileMap = tileMap;
+            this.gameWorld = gameWorld;
             Position = position;
         }
+
 
         /// <summary>
         /// Starter bevægelse langs en given sti. Stien skal være en liste af Tile-objekter.
@@ -51,7 +54,11 @@ namespace DAlgorithms.Classes.Objects
         /// <param name="tilePath">Stien som en liste af Tiles.</param>
         public void StartPathMovement(List<Tile> tilePath)
         {
-            if (tilePath == null || tilePath.Count == 0) return;
+            if (tilePath == null || tilePath.Count == 0)
+            {
+                Debug.WriteLine("Ingen sti fundet! Wizard står stille.");
+                return;
+            }
 
             // Omdan stien til en liste af positioner (tile-centre)
             pathPositions = new List<Vector2>();
@@ -66,7 +73,7 @@ namespace DAlgorithms.Classes.Objects
             CurrentState = WizardState.Running;
         }
 
-        public void Update(GameTime gameTime, List<Key> keys, Action<Key> onKeyCollected, Action onDestinationReached)
+        public void Update(GameTime gameTime)
         {
             timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (timer >= frameTime)
@@ -97,7 +104,6 @@ namespace DAlgorithms.Classes.Objects
                     {
                         pathPositions = null;
                         CurrentState = WizardState.Idle;
-                        onDestinationReached?.Invoke();
                     }
                 }
                 else
