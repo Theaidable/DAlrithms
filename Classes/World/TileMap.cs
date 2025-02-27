@@ -84,9 +84,40 @@ namespace DAlgorithms.Classes.World
                     oldTile.IsWalkable = false;
                     oldTile.SetSourceRectangle(0, 0, 18, 18);
                     break;
+                case TileType.NoMonster:
+                    oldTile.IsWalkable = true;
+                    oldTile.SetSourceRectangle(18, 0, 18, 18);
+                    break;
                 case TileType.Monster:
-                    oldTile.IsWalkable = true; // Start walkable, 
-                                               // Wizard can pass once, then set false
+                    oldTile.IsWalkable = false;
+                    oldTile.SetSourceRectangle(18, 0, 18, 18);
+                    break;
+                case TileType.LockedStormTower:
+                    oldTile.IsWalkable = false;
+                    oldTile.SetSourceRectangle(18, 0, 18, 18);
+                    break;
+                case TileType.OpenStormTower:
+                    oldTile.IsWalkable = true;
+                    oldTile.SetSourceRectangle(18, 0, 18, 18);
+                    break;
+                case TileType.LockedIceTower:
+                    oldTile.IsWalkable = false;
+                    oldTile.SetSourceRectangle(18, 0, 18, 18);
+                    break;
+                case TileType.OpenIceTower:
+                    oldTile.IsWalkable = true;
+                    oldTile.SetSourceRectangle(18, 0, 18, 18);
+                    break;
+                case TileType.LockedPortal:
+                    oldTile.IsWalkable = false;
+                    oldTile.SetSourceRectangle(18, 0, 18, 18);
+                    break;
+                case TileType.OpenPortal:
+                    oldTile.IsWalkable = true;
+                    oldTile.SetSourceRectangle(18, 0, 18, 18);
+                    break;
+                case TileType.Start:
+                    oldTile.IsWalkable = true;
                     oldTile.SetSourceRectangle(18, 0, 18, 18);
                     break;
             }

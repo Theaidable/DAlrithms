@@ -55,30 +55,38 @@ namespace DAlgorithms.Classes.World
         private List<Key> keys = new List<Key>();
         private List<Tree> trees = new List<Tree>();
 
+        //Graph
+        private Graph<string> graph;
+        private Dictionary<string, Point> nodePositions = new Dictionary<string, Point>()
+        {
+            {"Start", new Point(11,2) },
+            {"Exit", new Point(11,1) }
+        };
+
         //Map
         public int tileWidth = 80;
         public int tileHeight = 80;
         public char[,] layout = new char[,]
         {
             {'G','G','G','G','G','G','G','G','G','G','G','G','G','G' },
-            {'G','G','G','G','G','G','G','G','G','G','G','P','G','G' },
-            {'G','G','G','G','G','G','G','G','G','G','G','P','G','G' },
+            {'G','G','G','G','G','G','G','G','G','G','G','L','G','G' },
+            {'G','G','G','G','G','G','G','G','G','G','G','B','G','G' },
             {'G','G','G','G','G','G','G','G','G','G','G','P','G','G' },
             {'G','G','G','G','G','G','G','G','G','G','G','P','G','G' },
             {'G','G','G','G','G','G','G','G','G','G','G','P','G','G' },
             {'G','W','W','G','G','G','G','G','G','G','G','P','G','G' },
-            {'G','W','P','P','P','P','P','P','P','P','P','P','G','G' },
-            {'G','W','W','P','W','W','W','W','W','W','F','M','F','G' },
-            {'G','G','G','P','W','W','W','W','W','W','F','M','F','G' },
-            {'G','G','G','P','W','W','W','W','W','W','F','M','F','G' },
-            {'G','G','G','P','W','W','W','W','W','W','F','M','F','G' },
-            {'G','G','G','P','W','W','W','W','W','W','F','M','F','G' },
-            {'G','G','G','P','W','W','W','W','W','W','F','M','F','G' },
-            {'G','G','G','P','W','W','W','W','W','W','F','M','F','G' },
-            {'G','G','G','P','W','W','W','W','W','W','F','M','F','G' },
-            {'G','G','G','P','W','W','W','W','W','W','F','M','F','G' },
-            {'G','G','G','P','W','W','W','W','W','W','F','M','F','G' },
-            {'G','G','G','P','P','P','P','P','P','P','P','P','G','G' },
+            {'G','W','S','P','P','P','P','P','P','P','P','P','G','G' },
+            {'G','W','W','P','W','W','W','W','W','W','F','N','F','G' },
+            {'G','G','G','P','W','W','W','W','W','W','F','N','F','G' },
+            {'G','G','G','P','W','W','W','W','W','W','F','N','F','G' },
+            {'G','G','G','P','W','W','W','W','W','W','F','N','F','G' },
+            {'G','G','G','P','W','W','W','W','W','W','F','N','F','G' },
+            {'G','G','G','P','W','W','W','W','W','W','F','N','F','G' },
+            {'G','G','G','P','W','W','W','W','W','W','F','N','F','G' },
+            {'G','G','G','P','W','W','W','W','W','W','F','N','F','G' },
+            {'G','G','G','P','W','W','W','W','W','W','F','N','F','G' },
+            {'G','G','G','P','W','W','W','W','W','W','F','N','F','G' },
+            {'G','G','G','P','P','P','P','P','P','I','P','P','G','G' },
             {'G','G','G','G','G','G','G','G','P','P','P','G','G','G' },
             {'G','G','G','G','G','G','G','G','G','G','G','G','G','G' },
             {'G','G','G','G','G','G','G','G','G','G','G','G','G','G' },
@@ -186,7 +194,16 @@ namespace DAlgorithms.Classes.World
                 case 'W': return TileType.Wall;
                 case 'P': return TileType.Path;
                 case 'F': return TileType.Forest;
+                case 'N': return TileType.NoMonster;
                 case 'M': return TileType.Monster;
+                case 'S': return TileType.LockedStormTower;
+                case 'I': return TileType.LockedIceTower;
+                case 'L': return TileType.LockedPortal;
+                case 's': return TileType.OpenStormTower;
+                case 'i': return TileType.OpenIceTower;
+                case 'l': return TileType.OpenPortal;
+                case 'O': return TileType.OpenPortal;
+                case 'B': return TileType.Start;
                 default: return TileType.Grass; // fallback
             }
         }
@@ -232,18 +249,21 @@ namespace DAlgorithms.Classes.World
                 Icon = restartIcon,
                 PressedTexture = pressedButtonTexture,
             };
+            btnRestartGame.Click += (sender, e) => OnButtonClick(ButtonType.Restart);
 
             Button btnAStar = new Button(buttonTexture, new Vector2(btnRestartGame.Position.X + btnRestartGame.Texture.Width + 10, 10))
             {
                 Icon = aStarIcon,
                 PressedTexture = pressedButtonTexture,
             };
+            btnAStar.Click += (sender, e) => OnButtonClick(ButtonType.AStar);
 
             Button btnDFS = new Button(buttonTexture, new Vector2(btnAStar.Position.X + btnAStar.Texture.Width + 10, 10))
             {
                 Icon = dfsIcon,
                 PressedTexture = pressedButtonTexture,
             };
+            btnDFS.Click += (sender, e) => { OnButtonClick(ButtonType.DFS); };
 
             buttons.Add(btnRestartGame);
             buttons.Add(btnAStar);
@@ -268,6 +288,8 @@ namespace DAlgorithms.Classes.World
             stormTower = new Tower(TowerType.Storm, new Vector2(stormX, stormY), stormTowerTexture);
             iceTower = new Tower(TowerType.Ice, new Vector2(iceX, iceY), iceTowerTexture);
 
+            nodePositions.Add("StormTower", new Point((int)stormX, (int)stormY));
+            nodePositions.Add("IceTower", new Point((int)iceX, (int)iceY));
         }
 
         public void LoadKeys()
@@ -293,10 +315,10 @@ namespace DAlgorithms.Classes.World
             Tile randomTileForIceKey = walkableTiles[randomTile];
 
             //Placer nøglen i tile'ens center
-            float keyX = randomTileForIceKey.Position.X + (randomTileForIceKey.Width / 2f) - (iceTowerKeyTexture[0].Width / 2f);
-            float keyY = randomTileForIceKey.Position.Y + (randomTileForIceKey.Height / 2f) - (iceTowerKeyTexture[0].Height / 2f);
+            float iKeyX = randomTileForIceKey.Position.X + (randomTileForIceKey.Width / 2f) - (iceTowerKeyTexture[0].Width / 2f);
+            float iKeyY = randomTileForIceKey.Position.Y + (randomTileForIceKey.Height / 2f) - (iceTowerKeyTexture[0].Height / 2f);
 
-            iceKey = new Key(TowerType.Ice, new Vector2(keyX, keyY), iceTowerKeyTexture);
+            iceKey = new Key(TowerType.Ice, new Vector2(iKeyX, iKeyY), iceTowerKeyTexture);
 
             randomTile = random.Next(walkableTiles.Count);
             Tile randomTileForStormKey = walkableTiles[randomTile];
@@ -308,6 +330,9 @@ namespace DAlgorithms.Classes.World
 
             keys.Add(iceKey);
             keys.Add(stormKey);
+
+            nodePositions.Add("IceKey", new Point((int)iKeyX, (int)iKeyY));
+            nodePositions.Add("StormKey", new Point((int)sKeyX, (int)sKeyY));
         }
 
         public void LoadPortal()
@@ -431,23 +456,81 @@ namespace DAlgorithms.Classes.World
         private void RestartGame()
         {
             // Implementer reset-logik her
+
+            graph = null;
         }
 
-        /// <summary>
-        /// Kører A* pathfinding fra wizard til Storm Tower (fx).
-        /// Derefter flytter wizarden til sidste tile i stien.
-        /// </summary>
         private void RunAStar()
         {
             // Implementer A* pathfinding her
         }
 
-        /// <summary>
-        /// Kører DFS pathfinding fra wizard til Storm Tower.
-        /// </summary>
+        private void SetupGraph()
+        {
+            graph = new Graph<string>();
+
+            //Tilføj noder
+            graph.AddNode("Start");
+            graph.AddNode("StormKey");
+            graph.AddNode("IceKey");
+            graph.AddNode("StormTower");
+            graph.AddNode("IceTower");
+            graph.AddNode("Exit");
+
+            //Fra Entrance
+            graph.AddDirectedEdge("Start", "StormKey");
+            graph.AddDirectedEdge("Start", "IceKey");
+
+            //Fra StormKey
+            graph.AddEdge("StormKey","IceKey");
+            graph.AddDirectedEdge("StormKey", "StormTower");
+
+            //Fra IceKey
+            graph.AddDirectedEdge("IceKey", "IceTower");
+
+            //Fra StormTower
+            graph.AddDirectedEdge("StormTower","IceKey");
+            graph.AddDirectedEdge("StormTower", "IceTower");
+
+            //Fra IceTower
+            graph.AddDirectedEdge("IceTower", "Exit");
+        }
+
         private void RunDFS()
         {
             // Implementer DFS pathfinding her
+
+            if (graph == null) SetupGraph();
+
+            List<Node<string>> path = graph.FindPathDFS("Start", "Exit", wizard);
+
+            if (path.Count == 0)
+            {
+                Console.WriteLine("Ingen node-sti fundet");
+                return;
+            }
+
+            List<Tile> tilePath = new List<Tile>();
+            foreach (var node in path)
+            {
+               if (nodePositions.ContainsKey(node.Data))
+               {
+                    Point tilePos = nodePositions[node.Data];
+                    tilePath.Add(tileMap.GetTile(tilePos.X, tilePos.Y));
+                }
+            }
+            wizard.MoveAlongPath(tilePath, tileMap);
+
+            if (wizard.HasStormKey)
+            {
+                Point stormTilePos = nodePositions["StormTower"];
+                tileMap.SetTileType(stormTilePos.X, stormTilePos.Y, TileType.OpenStormTower);
+            }
+            if (wizard.HasIceKey && wizard.HasPotion)
+            {
+                Point iceTilePos = nodePositions["IceTower"];
+                tileMap.SetTileType(iceTilePos.X, iceTilePos.Y, TileType.OpenIceTower);
+            }
         }
     }
 }
