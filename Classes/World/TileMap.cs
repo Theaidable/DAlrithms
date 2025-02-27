@@ -65,7 +65,7 @@ namespace DAlgorithms.Classes.World
                     Rectangle sourceRectangle = new Rectangle(0, 0, tileWidth, tileHeight);
 
                     // Opret en ny tile af typen Grass
-                    tiles[x, y] = new Tile(position, tileWidth, tileHeight, TileType.Grass, tileTexture, sourceRectangle);
+                    tiles[x, y] = new Tile(position, tileWidth, tileHeight, TileType.Grass, tileTexture, sourceRectangle, x, y);
                 }
             }
         }

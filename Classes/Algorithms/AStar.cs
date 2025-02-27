@@ -97,8 +97,8 @@ namespace DAlgorithms.Classes.Algorithms
         {
             // For en 2D grid: |x1 - x2| + |y1 - y2|
             // Gang evt. med en cost (f.eks. 10). Her bruger vi bare 1 pr. step.
-            var dx = Math.Abs(a.Position.X - b.Position.X);
-            var dy = Math.Abs(a.Position.Y - b.Position.Y);
+            float dx = Math.Abs(a.IndexX - b.IndexX);
+            float dy = Math.Abs(a.IndexY - b.IndexY);
             return dx + dy;
         }
 
@@ -133,9 +133,9 @@ namespace DAlgorithms.Classes.Algorithms
             // Tjek 4 retninger (op, ned, venstre, højre)
             for (int i = 0; i < directionsX.Length; i++)
             {
-                int nx = (int)tile.Position.X + directionsX[i];
-                int ny = (int)tile.Position.Y + directionsY[i];
-                Point neighborPos = new Point(nx, ny);
+                int nx = tile.IndexX + directionsX[i];
+                int ny = tile.IndexY + directionsY[i];
+                var neighborPos = new Point(nx, ny);
 
                 // Tjek om neighbor er inden for grid
                 if (tiles.ContainsKey(neighborPos))

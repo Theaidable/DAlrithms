@@ -40,6 +40,9 @@ namespace DAlgorithms.Classes.World
         public Texture2D Texture { get; set; }
         public bool IsWalkable { get; set; }
 
+        public int IndexX { get; }
+        public int IndexY { get; }
+
         /// <summary>
         /// Konstruerer en ny tile med den angivne position, dimensioner, type og tekstur.
         /// Den definerer også, hvilken del af teksturet (sourceRectangle) der skal bruges.
@@ -50,8 +53,10 @@ namespace DAlgorithms.Classes.World
         /// <param name="type">Tile-typen (f.eks. Grass).</param>
         /// <param name="texture">Teksturen eller spritesheetet der indeholder tile grafik.</param>
         /// <param name="sourceRectangle">En rectangle der angiver, hvilken del af teksturet der skal bruges.</param>
-        public Tile(Vector2 position, int width, int height, TileType type, Texture2D texture, Rectangle sourceRectangle)
+        public Tile(Vector2 position, int width, int height, TileType type, Texture2D texture, Rectangle sourceRectangle, int indexX, int indexY)
         {
+            IndexX = indexX;
+            IndexY = indexY;
             Position = position;
             Width = width;
             Height = height;

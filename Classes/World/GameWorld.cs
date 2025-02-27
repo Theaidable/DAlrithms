@@ -286,7 +286,41 @@ namespace DAlgorithms.Classes.World
 
         private void OnAStar_Click(object sender, EventArgs e)
         {
-            RunAStar();
+            // 1) Byg et Dictionary med tile-koordinater -> Tile
+            Dictionary<Point, Tile> tileDictionary = new Dictionary<Point, Tile>();
+            for (int x = 0; x < layout.GetLength(0); x++)
+            {
+                for (int y = 0; y < layout.GetLength(1); y++)
+                {
+                    tileDictionary.Add(new Point(x, y), tileMap.GetTile(x, y));
+                }
+            }
+
+            // 2) Opret en AStar-instans
+            AStar aStar = new AStar(tileDictionary);
+
+            // 3) Find Wizardens nuværende tile-koordinat
+            Point wizardTile = new Point(
+                (int)(wizard.Position.X / tileWidth),
+                (int)(wizard.Position.Y / tileHeight)
+            );
+
+            // 4) Definér en mål-tile (fx StormTower tileX=7, tileY=2)
+            Point goalTile = new Point(7, 2);
+
+            // 5) Kør A*
+            List<Tile> path = aStar.FindPath(wizardTile, goalTile);
+
+            // 6) Få Wizard til at følge stien
+            if (path != null && path.Count > 0)
+            {
+                wizard.StartPathMovement(path);
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("AStar: Ingen sti fundet");
+            }
+            //RunAStar();
         }
 
         private void OnDFS_Click(object sender, EventArgs e)
@@ -463,7 +497,7 @@ namespace DAlgorithms.Classes.World
 
         private void RunAStar()
         {
-            // Implementer A* pathfinding her
+           
         }
 
         private void SetupGraph()
