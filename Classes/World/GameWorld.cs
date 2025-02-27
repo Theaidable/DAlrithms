@@ -63,6 +63,8 @@ namespace DAlgorithms.Classes.World
         private Dictionary<string, Point> nodePositions = new Dictionary<string, Point>()
         {
             {"Start", new Point(11,2) },
+            {"StormKey", Point.Zero },
+            {"IceKey", Point.Zero},
             {"StormTower", new Point(2,7) },
             {"IceTower", new Point(18,9)},
             {"Exit", new Point(11,1) }
@@ -339,6 +341,8 @@ namespace DAlgorithms.Classes.World
             float iKeyY = randomTileForIceKey.Position.Y + (randomTileForIceKey.Height / 2f) - (iceTowerKeyTexture[0].Height / 2f);
 
             iceKey = new Key(TowerType.Ice, new Vector2(iKeyX, iKeyY), iceTowerKeyTexture);
+            keys.Add(iceKey);
+            nodePositions["IceKey"] = new Point((int)iKeyX, (int)iKeyY);
 
             randomTile = random.Next(walkableTiles.Count);
             Tile randomTileForStormKey = walkableTiles[randomTile];
@@ -347,12 +351,8 @@ namespace DAlgorithms.Classes.World
             float sKeyY = randomTileForStormKey.Position.Y + (randomTileForStormKey.Height / 2f) - (stormTowerKeyTexture[0].Height / 2f);
 
             stormKey = new Key(TowerType.Storm, new Vector2(sKeyX, sKeyY), stormTowerKeyTexture);
-
-            keys.Add(iceKey);
             keys.Add(stormKey);
-
-            nodePositions.Add("IceKey", new Point((int)iKeyX, (int)iKeyY));
-            nodePositions.Add("StormKey", new Point((int)sKeyX, (int)sKeyY));
+            nodePositions["StormKey"] = new Point((int)sKeyX, (int)sKeyY);
         }
 
         public void LoadPortal()
@@ -481,25 +481,83 @@ namespace DAlgorithms.Classes.World
             //Fra Entrance
             graph.AddDirectedEdge("Start", "StormKey");
             graph.AddDirectedEdge("Start", "IceKey");
-
-            //Fra StormKey
-            graph.AddEdge("StormKey","IceKey");
-            graph.AddDirectedEdge("StormKey", "StormTower");
-
-            //Fra IceKey
-            graph.AddDirectedEdge("IceKey", "IceTower");
-
-            //Fra StormTower
-            graph.AddDirectedEdge("StormTower","IceKey");
-            graph.AddDirectedEdge("StormTower", "IceTower");
-
-            //Fra IceTower
-            graph.AddDirectedEdge("IceTower", "Exit");
         }
+
+        private void UpdateGraphBasedOnProximity(Wizard wizard)
+        {
+            // Konverter wizardens position til tile‑indeks (hvis ikke allerede)
+            int wizTileX = (int)wizard.Position.X / tileWidth;
+            int wizTileY = (int)wizard.Position.Y / tileHeight;
+            Vector2 wizTilePos = new Vector2(wizTileX, wizTileY);
+
+            // Udregn afstanden til IceKey og StormKey – antag at nodePositions nu indeholder
+            // tile‑koordinater (eller pixelkoordinater, som vi omregner til tile‑indeks)
+            Point iceKeyPixel = nodePositions["IceKey"];
+            Point stormKeyPixel = nodePositions["StormKey"];
+
+            float distanceToIceKey = Vector2.Distance(wizTilePos, new Vector2(iceKeyPixel.X / tileWidth, iceKeyPixel.Y / tileHeight));
+            float distanceToStormKey = Vector2.Distance(wizTilePos, new Vector2(stormKeyPixel.X / tileWidth, stormKeyPixel.Y / tileHeight));
+
+            // Fjern eventuelt gamle kanter – her antages, at grafen startes frisk eller at
+            // du kan tilføje nye kanter uden at få duplikerede
+
+            // Nu tilføjes kanterne baseret på betingelser:
+            if (distanceToIceKey < distanceToStormKey)
+            {
+                // Wizard er tættere på IceKey først:
+                // Rute: Start -> IceKey -> StormKey -> StormTower -> IceTower -> Exit
+                // (Bemærk: hvis kanterne allerede findes, skal du undgå at tilføje dem igen)
+                graph.AddDirectedEdge("Start", "IceKey");
+                graph.AddDirectedEdge("IceKey", "StormKey");
+                graph.AddDirectedEdge("StormKey", "StormTower");
+                graph.AddDirectedEdge("StormTower", "IceTower");
+                graph.AddDirectedEdge("IceTower", "Exit");
+            }
+            else
+            {
+                // Wizard er tættere på StormKey først.
+                // Nu skal vi tjekke, om han er tættest på StormTower eller IceKey som næste skridt:
+                Point stormKeyPos = nodePositions["StormKey"];
+                Point stormTowerPos = nodePositions["StormTower"];
+                Point iceKeyPos = nodePositions["IceKey"];
+
+                float distanceStormKeyToStormTower = Vector2.Distance(
+                    new Vector2(stormKeyPos.X / tileWidth, stormKeyPos.Y / tileHeight),
+                    new Vector2(stormTowerPos.X / tileWidth, stormTowerPos.Y / tileHeight)
+                );
+                float distanceStormKeyToIceKey = Vector2.Distance(
+                    new Vector2(stormKeyPos.X / tileWidth, stormKeyPos.Y / tileHeight),
+                    new Vector2(iceKeyPos.X / tileWidth, iceKeyPos.Y / tileHeight)
+                );
+
+                if (distanceStormKeyToStormTower < distanceStormKeyToIceKey)
+                {
+                    // Rute: Start -> StormKey -> StormTower -> IceKey -> IceTower -> Exit
+                    graph.AddDirectedEdge("Start", "StormKey");
+                    graph.AddDirectedEdge("StormKey", "StormTower");
+                    graph.AddDirectedEdge("StormTower", "IceKey");
+                    graph.AddDirectedEdge("IceKey", "IceTower");
+                    graph.AddDirectedEdge("IceTower", "Exit");
+                }
+                else
+                {
+                    // Rute: Start -> StormKey -> IceKey -> StormTower -> IceTower -> Exit
+                    graph.AddDirectedEdge("Start", "StormKey");
+                    graph.AddDirectedEdge("StormKey", "IceKey");
+                    graph.AddDirectedEdge("IceKey", "StormTower");
+                    graph.AddDirectedEdge("StormTower", "IceTower");
+                    graph.AddDirectedEdge("IceTower", "Exit");
+                }
+            }
+        }
+
 
         private void RunDFS()
         {
             if (graph == null) SetupGraph();
+
+            // Opdater grafen baseret på wizardens nuværende position og afstande
+            UpdateGraphBasedOnProximity(wizard);
 
             List<Node<string>> path = graph.FindPathDFS("Start", "Exit", wizard);
 
@@ -522,15 +580,17 @@ namespace DAlgorithms.Classes.World
             {
                 if (nodePositions.ContainsKey(node.Data))
                 {
-                    Point tilePos = nodePositions[node.Data];
-                    tilePath.Add(tileMap.GetTile(tilePos.X, tilePos.Y));
+                    Point pixelPos = nodePositions[node.Data];
+                    int tileIndexX = pixelPos.X / tileWidth;
+                    int tileIndexY = pixelPos.Y / tileHeight;
+                    tilePath.Add(tileMap.GetTile(tileIndexX, tileIndexY));
                 }
             }
 
             // Start bevægelse langs stien
             wizard.StartPathMovement(tilePath);
 
-            // Opdater tårn-tilstande baseret på nøgler og potioner
+            // Opdater tårn-tilstande hvis nødvendigt
             if (wizard.HasStormKey)
             {
                 Point stormTilePos = nodePositions["StormTower"];

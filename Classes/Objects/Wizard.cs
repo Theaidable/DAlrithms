@@ -47,17 +47,13 @@ namespace DAlgorithms.Classes.Objects
         /// <param name="tilePath">Stien som en liste af Tiles.</param>
         public void StartPathMovement(List<Tile> tilePath)
         {
-            if (tilePath == null || tilePath.Count == 0)
-                return;
+            if (tilePath == null || tilePath.Count == 0) return;
 
             // Omdan stien til en liste af positioner (tile-centre)
             pathPositions = new List<Vector2>();
             foreach (var tile in tilePath)
             {
-                Vector2 targetPos = new Vector2(
-                    tile.Position.X + tile.Width / 2f - (idleFrames[0].Width / 2f),
-                    tile.Position.Y + tile.Height / 2f - (idleFrames[0].Height / 2f)
-                );
+                Vector2 targetPos = new Vector2(tile.Position.X + tile.Width / 2f - (idleFrames[0].Width / 2f), tile.Position.Y + tile.Height / 2f - (idleFrames[0].Height / 2f));
                 pathPositions.Add(targetPos);
             }
 
