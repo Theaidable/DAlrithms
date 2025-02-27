@@ -37,12 +37,10 @@ namespace DAlgorithms.Classes.Objects
         private TileMap tileMap;
         private GameWorld gameWorld; // Reference til GameWorld for at kalde RunDFS()
 
-        public Wizard(Texture2D[] idleFrames, Texture2D[] runFrames, Vector2 position, TileMap tileMap, GameWorld gameWorld)
+        public Wizard(Texture2D[] idleFrames, Texture2D[] runFrames, Vector2 position)
         {
             this.idleFrames = idleFrames;
             this.runFrames = runFrames;
-            this.tileMap = tileMap;
-            this.gameWorld = gameWorld;
             Position = position;
         }
 
