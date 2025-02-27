@@ -4,17 +4,18 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 using System;
+using System.Collections.Generic;
 
 namespace DAlgorithms.Classes.World
 {
     public class TileMap
     {
-        // Private felter
+        //felter
         private Tile[,] tiles;   // 2D-array med Tile-objekter
-        private int mapWidth;    // Antal tiles vandret
-        private int mapHeight;   // Antal tiles lodret
-        private int tileWidth;   // Bredde af hver tile
-        private int tileHeight;  // Højde af hver tile
+        public int mapWidth;    // Antal tiles vandret
+        public int mapHeight;   // Antal tiles lodret
+        public int tileWidth;   // Bredde af hver tile
+        public int tileHeight;  // Højde af hver tile
         private Texture2D tileTexture; // Tekstur/spritesheet for tiles
 
         public Tile GetTile(int x, int y)
@@ -71,6 +72,12 @@ namespace DAlgorithms.Classes.World
         }
         public void SetTileType(int x, int y, TileType newType)
         {
+            if (x < 0 || x >= tiles.GetLength(0) || y < 0 || y >= tiles.GetLength(1))
+            {
+                Debug.WriteLine($"Fejl: SetTileType prøver at ændre tile uden for arrayets grænser! x={x}, y={y}");
+                return; // Undgå crash
+            }
+
             Tile oldTile = tiles[x, y];
             oldTile.Type = newType;
 
@@ -91,6 +98,14 @@ namespace DAlgorithms.Classes.World
                 case TileType.Forest:
                     oldTile.IsWalkable = false;
                     oldTile.SetSourceRectangle(0, 0, 18, 18);
+                    break;
+                case TileType.IceKey:
+                    oldTile.IsWalkable = true;
+                    oldTile.SetSourceRectangle(18, 0, 18, 18);
+                    break;
+                case TileType.StormKey:
+                    oldTile.IsWalkable = true;
+                    oldTile.SetSourceRectangle(18, 0, 18, 18);
                     break;
                 case TileType.NoMonster:
                     oldTile.IsWalkable = true;
@@ -130,6 +145,51 @@ namespace DAlgorithms.Classes.World
                     break;
             }
         }
+        public List<Tile> GetWalkableTilesBetween(Vector2 start, Vector2 end)
+        {
+            List<Tile> pathTiles = new List<Tile>();
+
+            Vector2 direction = end - start;
+            if (direction.Length() == 0)
+            {
+                Debug.WriteLine($"Samme start og slut tile: {start} → {end}");
+                return pathTiles;
+            }
+            direction.Normalize();
+
+            Vector2 currentPos = start;
+
+            Debug.WriteLine($"Finder walkable tiles mellem {start} → {end}");
+
+            while (Vector2.Distance(currentPos, end) > 1f)
+            {
+                currentPos += direction * tileWidth;
+
+                int tileX = (int)(currentPos.X);
+                int tileY = (int)(currentPos.Y);
+
+                if (tileX < 0 || tileX >= mapWidth || tileY < 0 || tileY >= mapHeight)
+                {
+                    Debug.WriteLine($"Tile uden for kortet: {tileX}, {tileY}");
+                    break;
+                }
+
+                Tile tile = GetTile(tileX, tileY);
+                if (tile.IsWalkable)
+                {
+                    Debug.WriteLine($"Walkable tile: {tileX}, {tileY}");
+                    pathTiles.Add(tile);
+                }
+                else
+                {
+                    Debug.WriteLine($"Ikke-walkable tile: {tileX}, {tileY}");
+                }
+            }
+
+            return pathTiles;
+        }
+
+
 
         /// <summary>
         /// Tegner hele tilemap'et på skærmen.
