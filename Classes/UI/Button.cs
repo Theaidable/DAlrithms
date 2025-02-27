@@ -18,69 +18,29 @@ namespace DAlgorithms.Classes.UI
     /// </summary>
     public class Button
     {
-        /// <summary>
-        /// Teksturen for knappen i normal tilstand.
-        /// </summary>
+
         public Texture2D Texture { get; set; }
 
-        /// <summary>
-        /// Teksturen for knappen, når den er trykket.
-        /// </summary>
         public Texture2D PressedTexture { get; set; }
 
-        /// <summary>
-        /// Ikonet, der vises på knappen.
-        /// </summary>
         public Texture2D Icon { get; set; }
 
-        /// <summary>
-        /// Positionen (øverste venstre hjørne) for knappen.
-        /// </summary>
         public Vector2 Position { get; set; }
 
-        /// <summary>
-        /// Den klikbare område for knappen. Her antages en skalering på 2.
-        /// (Bemærk: hvis du ændrer skaleringen i Draw, bør denne også justeres.)
-        /// </summary>
         public Rectangle Bounds => new Rectangle((int)Position.X, (int)Position.Y, (int)Texture.Width, (int)Texture.Height);
-        /// <summary>
-        /// Teksten, der vises på knappen.
-        /// </summary>
-        /// 
         public string Text { get; set; }
-
-        /// <summary>
-        /// Den SpriteFont, der bruges til at tegne teksten.
-        /// </summary>
         public SpriteFont Font { get; set; }
-
-        /// <summary>
-        /// Tint-farven for knappen (standard: hvid).
-        /// </summary>
         public Color Tint { get; set; } = Color.White;
 
-        /// <summary>
-        /// Indikerer om musen er over knappen.
-        /// </summary>
         public bool IsHovering { get; private set; }
-
-        /// <summary>
-        /// Indikerer om knappen er trykket.
-        /// </summary>
         public bool IsPressed { get; private set; }
 
-        /// <summary>
-        /// Source rectangle for ikonet, der gør det muligt at "cutte" en del ud af ikonet.
-        /// </summary>
         public Rectangle IconSourceRect { get; set; } = Rectangle.Empty;
 
         /// <summary>
         /// Event, der udløses, når knappen klikkes.
         /// </summary>
         public event EventHandler Click;
-        public event EventHandler ClickRestart;
-        public event EventHandler ClickAStar;
-        public event EventHandler ClickDFS;
 
         private MouseState currentMouse;
         private MouseState previousMouse;

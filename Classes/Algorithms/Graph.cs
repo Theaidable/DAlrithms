@@ -89,18 +89,6 @@ namespace DAlgorithms.Classes.Algorithms
 
         private bool IsEdgeAllowed(Wizard wizard, Node<T> from, Node<T> to)
         {
-            string neighborName = to.Data.ToString();
-
-            if(neighborName == "StormTower")
-            {
-                return wizard.HasStormKey;
-            }
-
-            if (neighborName == "IceTower")
-            {
-                return wizard.HasIceKey && wizard.HasPotion;
-            }
-
             return true;
         }
 

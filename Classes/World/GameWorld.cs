@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System;
+using System.Diagnostics;
 
 namespace DAlgorithms.Classes.World
 {
@@ -22,7 +23,9 @@ namespace DAlgorithms.Classes.World
         // Reference til andre klasser
         private Portal portal;
         private Wizard wizard;
-        private Button button;
+        private Button btnRestartGame;
+        private Button btnDFS;
+        private Button btnAStar;
         private Tower tower;
         private Key key;
         private TileMap tileMap;
@@ -60,7 +63,10 @@ namespace DAlgorithms.Classes.World
         private Dictionary<string, Point> nodePositions = new Dictionary<string, Point>()
         {
             {"Start", new Point(11,2) },
+            {"StormTower", new Point(2,7) },
+            {"IceTower", new Point(18,9)},
             {"Exit", new Point(11,1) }
+
         };
 
         //Map
@@ -131,6 +137,10 @@ namespace DAlgorithms.Classes.World
             LoadKeys();
             LoadPortal();
             LoadWizard();
+
+            btnRestartGame.Click += OnRestartGame_Click;
+            btnAStar.Click += OnAStar_Click;
+            btnDFS.Click += OnDFS_Click;
         }
 
         public void LoadTextures()
@@ -244,30 +254,43 @@ namespace DAlgorithms.Classes.World
 
         public void LoadButtons()
         {
-            Button btnRestartGame = new Button(buttonTexture, new Vector2(10, 10))
+            btnRestartGame = new Button(buttonTexture, new Vector2(10, 10))
             {
                 Icon = restartIcon,
                 PressedTexture = pressedButtonTexture,
             };
-            btnRestartGame.Click += (sender, e) => OnButtonClick(ButtonType.Restart);
 
-            Button btnAStar = new Button(buttonTexture, new Vector2(btnRestartGame.Position.X + btnRestartGame.Texture.Width + 10, 10))
+            btnAStar = new Button(buttonTexture, new Vector2(btnRestartGame.Position.X + btnRestartGame.Texture.Width + 10, 10))
             {
                 Icon = aStarIcon,
                 PressedTexture = pressedButtonTexture,
             };
-            btnAStar.Click += (sender, e) => OnButtonClick(ButtonType.AStar);
 
-            Button btnDFS = new Button(buttonTexture, new Vector2(btnAStar.Position.X + btnAStar.Texture.Width + 10, 10))
+            btnDFS = new Button(buttonTexture, new Vector2(btnAStar.Position.X + btnAStar.Texture.Width + 10, 10))
             {
                 Icon = dfsIcon,
                 PressedTexture = pressedButtonTexture,
             };
-            btnDFS.Click += (sender, e) => { OnButtonClick(ButtonType.DFS); };
 
             buttons.Add(btnRestartGame);
             buttons.Add(btnAStar);
             buttons.Add(btnDFS);
+        }
+
+        private void OnRestartGame_Click(object sender, EventArgs e)
+        {
+            RestartGame();
+        }
+
+        private void OnAStar_Click(object sender, EventArgs e)
+        {
+            RunAStar();
+        }
+
+        private void OnDFS_Click(object sender, EventArgs e)
+        {
+            Debug.WriteLine("Du har nu klikket på DFS knap");
+            RunDFS();
         }
 
         /// <summary>
@@ -287,9 +310,6 @@ namespace DAlgorithms.Classes.World
 
             stormTower = new Tower(TowerType.Storm, new Vector2(stormX, stormY), stormTowerTexture);
             iceTower = new Tower(TowerType.Ice, new Vector2(iceX, iceY), iceTowerTexture);
-
-            nodePositions.Add("StormTower", new Point((int)stormX, (int)stormY));
-            nodePositions.Add("IceTower", new Point((int)iceX, (int)iceY));
         }
 
         public void LoadKeys()
@@ -432,25 +452,6 @@ namespace DAlgorithms.Classes.World
         }
 
         /// <summary>
-        /// Håndterer klik på knapper (restart, AStar, DFS).
-        /// </summary>
-        private void OnButtonClick(ButtonType buttonType)
-        {
-            switch (buttonType)
-            {
-                case ButtonType.Restart:
-                    RestartGame();
-                    break;
-                case ButtonType.AStar:
-                    RunAStar();
-                    break;
-                case ButtonType.DFS:
-                    RunDFS();
-                    break;
-            }
-        }
-
-        /// <summary>
         /// Nulstiller spillet (fx reloader tilemap, wizard position, m.m.).
         /// </summary>
         private void RestartGame()
@@ -498,29 +499,38 @@ namespace DAlgorithms.Classes.World
 
         private void RunDFS()
         {
-            // Implementer DFS pathfinding her
-
             if (graph == null) SetupGraph();
 
             List<Node<string>> path = graph.FindPathDFS("Start", "Exit", wizard);
 
             if (path.Count == 0)
             {
-                Console.WriteLine("Ingen node-sti fundet");
+                Debug.WriteLine("Ingen node-sti fundet");
                 return;
+            }
+            else
+            {
+                Console.WriteLine("Path fundet:");
+                    foreach (var node in path)
+                {
+                    Debug.WriteLine(node.Data);
+                }
             }
 
             List<Tile> tilePath = new List<Tile>();
             foreach (var node in path)
             {
-               if (nodePositions.ContainsKey(node.Data))
-               {
+                if (nodePositions.ContainsKey(node.Data))
+                {
                     Point tilePos = nodePositions[node.Data];
                     tilePath.Add(tileMap.GetTile(tilePos.X, tilePos.Y));
                 }
             }
-            wizard.MoveAlongPath(tilePath, tileMap);
 
+            // Start bevægelse langs stien
+            wizard.StartPathMovement(tilePath);
+
+            // Opdater tårn-tilstande baseret på nøgler og potioner
             if (wizard.HasStormKey)
             {
                 Point stormTilePos = nodePositions["StormTower"];
