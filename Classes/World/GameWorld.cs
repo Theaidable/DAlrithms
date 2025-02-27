@@ -384,7 +384,7 @@ namespace DAlgorithms.Classes.World
             float yPos = tileY * tileHeight - 10 - wizardIdleTexture[0].Width / 2;
 
             Vector2 wizardPosition = new Vector2(xPos, yPos);
-            wizard = new Wizard(wizardIdleTexture, wizardRunningTexture, wizardPosition);
+            wizard = new Wizard(wizardIdleTexture, wizardRunningTexture, wizardPosition, tileMap, this);
         }
 
         /// <summary>
@@ -492,7 +492,7 @@ namespace DAlgorithms.Classes.World
             graph.AddEdge("StormKey", "IceKey");
         }
 
-        private void UpdateGraphBasedOnProximity(Wizard wizard)
+        public void UpdateGraphBasedOnProximity(Wizard wizard)
         {   
             if(wizard.HasStormKey && wizard.HasIceKey)
             {
@@ -529,8 +529,7 @@ namespace DAlgorithms.Classes.World
             }
         }
 
-
-        private void RunDFS()
+        public void RunDFS()
         {
             if (graph == null) SetupGraph();
 
@@ -550,6 +549,25 @@ namespace DAlgorithms.Classes.World
                 }
             }
 
+            wizard.pathPositions.Clear();
+
+            for (int i = 0; i < path.Count - 1; i++)
+            {
+                Point startNode = nodePositions[path[i].Data];
+                Point endNode = nodePositions[path[i + 1].Data];
+
+                Vector2 startTile = new Vector2(startNode.X * tileWidth, startNode.Y * tileHeight);
+                Vector2 endTile = new Vector2(endNode.X * tileWidth, endNode.Y * tileHeight);
+
+                List<Vector2> tilesBetween = tileMap.GetWalkableTilesBetween(startTile, endTile);
+
+                wizard.pathPositions.AddRange(tilesBetween);
+            }
+
+            wizard.currentTargetIndex = 0;
+            wizard.CurrentState = WizardState.Running;
+
+
             // Start bevægelse langs stien
 
             //Når wizard rammer noden StormKey så sættes boolean HasStormKey til true
@@ -558,11 +576,14 @@ namespace DAlgorithms.Classes.World
             if (wizard.HasStormKey)
             {
                 tileMap.SetTileType(7, 2, TileType.OpenStormTower);
-                wizard.HasPotion = true;
-                wizard.VisitedStormTower = true;
                 UpdateGraphBasedOnProximity(wizard);
                 List<Node<string>> newPath = graph.FindPathDFS("StormKey","Exit");
             }
+
+            /*
+             * Når wizard rammer StormTower noden
+                wizard.HasPotion = true;
+                wizard.VisitedStormTower = true;
 
             //Når wizard rammer node til IceKey så sættes boolean HasIceKey til true
 
@@ -571,6 +592,7 @@ namespace DAlgorithms.Classes.World
                 Point iceTilePos = nodePositions["IceTower"];
                 tileMap.SetTileType(iceTilePos.X, iceTilePos.Y, TileType.OpenIceTower);
             }
+                         */
         }
     }
 }
