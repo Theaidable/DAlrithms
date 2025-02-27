@@ -89,7 +89,7 @@ namespace DAlgorithms.Classes.World
                     oldTile.SetSourceRectangle(18, 0, 18, 18);
                     break;
                 case TileType.Forest:
-                    oldTile.IsWalkable = false;
+                    oldTile.IsWalkable = true;
                     oldTile.SetSourceRectangle(0, 0, 18, 18);
                     break;
                 case TileType.NoMonster:

@@ -372,11 +372,22 @@ namespace DAlgorithms.Classes.World
             int tileX = 2;
             int tileY = 11;
 
-            float xPos = tileX * 80 + 10 - wizardIdleTexture[0].Width / 2;
-            float yPos = tileY * 80 - 10 - wizardIdleTexture[0].Height / 2;
+            //float xPos = tileX * 80 + 10 - wizardIdleTexture[0].Width / 2;
+            //float yPos = tileY * 80 - 10 - wizardIdleTexture[0].Height / 2;
+
+            //Vector2 wizardPosition = new Vector2(xPos, yPos);
+            //wizard = new Wizard(wizardIdleTexture, wizardRunningTexture, wizardPosition);
+
+            // Beregn position baseret på tile-koordinater
+            float xPos = tileX * tileWidth + (tileWidth / 2f) - (wizardIdleTexture[0].Width / 2f);
+            float yPos = tileY * tileHeight + (tileHeight / 2f) - (wizardIdleTexture[0].Height / 2f);
 
             Vector2 wizardPosition = new Vector2(xPos, yPos);
             wizard = new Wizard(wizardIdleTexture, wizardRunningTexture, wizardPosition);
+
+            // Debugging
+            Debug.WriteLine($"Wizard startposition (pixels): {xPos}, {yPos}");
+            Debug.WriteLine($"Wizard startposition (tiles): {tileX}, {tileY}");
         }
 
         /// <summary>
@@ -461,9 +472,105 @@ namespace DAlgorithms.Classes.World
             graph = null;
         }
 
+        private Point GetNextGoal()
+        {
+            Point goalPixelPos;
+
+            if (!wizard.HasStormKey)
+            {
+                Debug.WriteLine("Wizard skal hente Storm Key");
+                goalPixelPos = nodePositions["StormKey"];
+            }
+            else if (!wizard.HasIceKey)
+            {
+                Debug.WriteLine("Wizard skal hente Ice Key");
+                goalPixelPos = nodePositions["IceKey"];
+            }
+            else if (!wizard.HasPotion)
+            {
+                Debug.WriteLine("Wizard skal til Storm Tower for potion");
+                goalPixelPos = nodePositions["StormTower"];
+            }
+            else if (!wizard.VisitedIceTower)
+            {
+                Debug.WriteLine("Wizard skal til Ice Tower for at aflevere potion");
+                goalPixelPos = nodePositions["IceTower"];
+            }
+            else
+            {
+                Debug.WriteLine("Wizard skal tilbage til portalen");
+                goalPixelPos = nodePositions["Exit"];
+            }
+
+            // Debug udskrift for at se de rigtige pixelkoordinater
+            Debug.WriteLine($"Pixel Goal Position: {goalPixelPos.X}, {goalPixelPos.Y}");
+
+            // Konverter pixel-koordinater til tile-koordinater
+            Point goalTilePos = new Point(goalPixelPos.X / tileWidth, goalPixelPos.Y / tileHeight);
+
+            Debug.WriteLine($"Konverteret Goal Position: {goalTilePos.X}, {goalTilePos.Y}");
+
+            return goalTilePos;
+        }
+
         private void RunAStar()
         {
-            // Implementer A* pathfinding her
+            if (wizard == null || tileMap == null) return;
+
+            // Konverter wizardens position fra pixels til tile-koordinater
+            Point startPos = new Point((int)(wizard.Position.X / tileWidth), (int)(wizard.Position.Y / tileHeight));
+            Point goalPos = GetNextGoal();
+
+            Debug.WriteLine($"Start Pos: {startPos.X}, {startPos.Y}");
+            Debug.WriteLine($"Goal Pos: {goalPos.X}, {goalPos.Y}");
+
+            // Opret en dictionary af tiles
+            Dictionary<Point, Tile> tileDict = new Dictionary<Point, Tile>();
+            for (int x = 0; x < layout.GetLength(0); x++)
+            {
+                for (int y = 0; y < layout.GetLength(1); y++)
+                {
+                    tileDict[new Point(x, y)] = tileMap.GetTile(x, y);
+                }
+            }
+
+            // Tjek om start- og målposition er gyldige
+            if (!tileDict.ContainsKey(startPos) || !tileDict.ContainsKey(goalPos))
+            {
+                Debug.WriteLine("Start- eller målposition findes ikke i tileDict!");
+                Debug.WriteLine($"FEJL: Goal Tile Position {goalPos.X}, {goalPos.Y} findes ikke i tileDict!");
+                return;
+            }
+
+            // Opret AStar objekt
+            AStar pathfinder = new AStar(tileDict);            
+            List<Tile> path = pathfinder.FindPath(startPos, goalPos);
+
+            if (path.Count > 0)
+            {
+                Debug.WriteLine($"Sti fundet! Længde: {path.Count}");
+                wizard.StartPathMovement(path);
+            }
+            else
+            {
+                Debug.WriteLine("Ingen sti fundet!");
+            }
+
+            if (!tileDict[startPos].IsWalkable)
+            {
+                Debug.WriteLine("Start-tile er ikke walkable!");
+            }
+            if (!tileDict[goalPos].IsWalkable)
+            {
+                Debug.WriteLine("Mål-tile er ikke walkable!");
+            }
+
+            Debug.WriteLine("TileDict indeholder følgende keys:");
+            foreach (var key in tileDict.Keys)
+            {
+                Debug.WriteLine($"Tile: {key.X}, {key.Y}");
+            }
+
         }
 
         private void SetupGraph()
