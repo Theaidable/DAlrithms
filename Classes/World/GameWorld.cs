@@ -28,7 +28,7 @@ namespace DAlgorithms.Classes.World
         private Button btnAStar;
         private Tower tower;
         private Key key;
-        private TileMap tileMap;
+        public static TileMap tileMap;
         private Tile tile;
 
         //Objekter
@@ -60,7 +60,7 @@ namespace DAlgorithms.Classes.World
 
         //Graph
         private Graph<string> graph;
-        private Dictionary<string, Point> nodePositions = new Dictionary<string, Point>()
+        public static Dictionary<string, Point> nodePositions = new Dictionary<string, Point>()
         {
             {"Start", new Point(11,2) },
             {"StormKey", Point.Zero },

@@ -132,12 +132,18 @@ namespace DAlgorithms.Classes.Objects
                         // 🚀 Gør Storm Tower walkable
                         Point stormTowerTile = GameWorld.nodePositions["StormTower"];
                         GameWorld.tileMap.SetTileType(stormTowerTile.X, stormTowerTile.Y, TileType.OpenStormTower);
+                        Debug.WriteLine($"Storm Tower åbnet på tile: {stormTowerTile.X}, {stormTowerTile.Y}");
                     }
 
                     else if (key.TowerType == TowerType.Ice)
                     {
                         HasIceKey = true;
                         Debug.WriteLine("Wizarden har samlet Ice Key op!");
+
+                        // 🚀 Gør Ice Tower walkable
+                        Point iceTowerTile = GameWorld.nodePositions["IceTower"];
+                        GameWorld.tileMap.SetTileType(iceTowerTile.X, iceTowerTile.Y, TileType.OpenIceTower);
+                        Debug.WriteLine($"Ice Tower åbnet på tile: {iceTowerTile.X}, {iceTowerTile.Y}");
                     }
 
                     // 🚀 Fjern key-objektet fra spillet
