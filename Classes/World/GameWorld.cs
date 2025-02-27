@@ -79,7 +79,7 @@ namespace DAlgorithms.Classes.World
             {'G','G','G','P','W','W','W','W','W','W','F','M','F','G' },
             {'G','G','G','P','W','W','W','W','W','W','F','M','F','G' },
             {'G','G','G','P','P','P','P','P','P','P','P','P','G','G' },
-            {'G','G','G','G','G','G','G','G','G','G','G','G','G','G' },
+            {'G','G','G','G','G','G','G','G','P','P','P','G','G','G' },
             {'G','G','G','G','G','G','G','G','G','G','G','G','G','G' },
             {'G','G','G','G','G','G','G','G','G','G','G','G','G','G' },
             {'G','G','G','G','G','G','G','G','G','G','G','G','G','G' },
@@ -272,21 +272,42 @@ namespace DAlgorithms.Classes.World
 
         public void LoadKeys()
         {
+            List<Tile> walkableTiles = new List<Tile>();
+
+            for (int x = 0; x < layout.GetLength(0); x++)
+            {
+                for (int y = 0; y < layout.GetLength(1); y++)
+                {
+                    Tile walkableTile = tileMap.GetTile(x, y);
+                    if (walkableTile.IsWalkable == true)
+                    {
+                        walkableTiles.Add(walkableTile);
+                    }
+                }
+            }
+
             //Keys placering
 
             Random random = new Random();
-            int keyTileX = random.Next(1, 10);
-            int keyTileY = random.Next(1, 6);
+            int randomTile = random.Next(walkableTiles.Count);
+            Tile randomTileForIceKey = walkableTiles[randomTile];
 
-            float keyX = keyTileX * 80 + 45 - iceTowerKeyTexture[0].Width / 2;
-            float keyY = keyTileY * 80 + 40 - iceTowerKeyTexture[0].Height / 2;
+            //Placer nøglen i tile'ens center
+            float keyX = randomTileForIceKey.Position.X + (randomTileForIceKey.Width / 2f) - (iceTowerKeyTexture[0].Width / 2f);
+            float keyY = randomTileForIceKey.Position.Y + (randomTileForIceKey.Height / 2f) - (iceTowerKeyTexture[0].Height / 2f);
 
             iceKey = new Key(TowerType.Ice, new Vector2(keyX, keyY), iceTowerKeyTexture);
-            stormKey = new Key(TowerType.Storm, new Vector2(keyX + 160, keyY + 160), stormTowerKeyTexture);
+
+            randomTile = random.Next(walkableTiles.Count);
+            Tile randomTileForStormKey = walkableTiles[randomTile];
+
+            float sKeyX = randomTileForStormKey.Position.X + (randomTileForStormKey.Width / 2f) - (stormTowerKeyTexture[0].Width / 2f);
+            float sKeyY = randomTileForStormKey.Position.Y + (randomTileForStormKey.Height / 2f) - (stormTowerKeyTexture[0].Height / 2f);
+
+            stormKey = new Key(TowerType.Storm, new Vector2(sKeyX, sKeyY), stormTowerKeyTexture);
 
             keys.Add(iceKey);
             keys.Add(stormKey);
-
         }
 
         public void LoadPortal()

@@ -15,6 +15,11 @@ namespace DAlgorithms.Classes.World
         private int tileHeight;  // Højde af hver tile
         private Texture2D tileTexture; // Tekstur/spritesheet for tiles
 
+        public Tile GetTile(int x, int y)
+        {
+            return tiles[x, y];
+        }
+
         /// <summary>
         /// Konstruerer en ny TileMap med de angivne dimensioner og tekstur.
         /// Alle tiles oprettes som Grass-tiles.
@@ -64,7 +69,7 @@ namespace DAlgorithms.Classes.World
             switch (newType)
             {
                 case TileType.Grass:
-                    oldTile.IsWalkable = true;
+                    oldTile.IsWalkable = false;
                     oldTile.SetSourceRectangle(0, 0, 18, 18);
                     break;
                 case TileType.Wall:
