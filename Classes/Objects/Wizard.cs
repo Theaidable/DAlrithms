@@ -1,4 +1,5 @@
-﻿using DAlgorithms.Classes.World;
+﻿using DAlgorithms.Classes.Algorithms;
+using DAlgorithms.Classes.World;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -40,28 +41,6 @@ namespace DAlgorithms.Classes.Objects
             Position = position;
         }
 
-        /// <summary>
-        /// Starter bevægelse langs en given sti. Stien skal være en liste af Tile-objekter.
-        /// Vi beregner her tile-center for hvert element og gemmer dem som mål.
-        /// </summary>
-        /// <param name="tilePath">Stien som en liste af Tiles.</param>
-        public void StartPathMovement(List<Tile> tilePath)
-        {
-            if (tilePath == null || tilePath.Count == 0) return;
-
-            // Omdan stien til en liste af positioner (tile-centre)
-            pathPositions = new List<Vector2>();
-            foreach (var tile in tilePath)
-            {
-                Vector2 targetPos = new Vector2(tile.Position.X + tile.Width / 2f - (idleFrames[0].Width / 2f), tile.Position.Y + tile.Height / 2f - (idleFrames[0].Height / 2f));
-                pathPositions.Add(targetPos);
-            }
-
-            currentTargetIndex = 0;
-            // Skift til Running state
-            CurrentState = WizardState.Running;
-        }
-
         public void Update(GameTime gameTime)
         {
             // Opdater animationen
@@ -78,33 +57,6 @@ namespace DAlgorithms.Classes.Objects
                     case WizardState.Running:
                         animationIndex %= runFrames.Length;
                         break;
-                }
-            }
-
-            // Hvis vi har en sti, flyt mod næste mål
-            if (pathPositions != null && currentTargetIndex < pathPositions.Count)
-            {
-                Vector2 target = pathPositions[currentTargetIndex];
-                // Beregn retning og afstand
-                Vector2 direction = target - Position;
-                float distance = direction.Length();
-
-                if (distance < 1f)
-                {
-                    // Vi er nået til mål, skift til næste
-                    currentTargetIndex++;
-                    if (currentTargetIndex >= pathPositions.Count)
-                    {
-                        // Færdig bevægelse
-                        pathPositions = null;
-                        CurrentState = WizardState.Idle;
-                    }
-                }
-                else
-                {
-                    direction.Normalize();
-                    // Flyt med hastighed * deltaTime
-                    Position += direction * movementSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 }
             }
         }
@@ -128,15 +80,6 @@ namespace DAlgorithms.Classes.Objects
             {
                 spriteBatch.Draw(currentFrame, Position, null, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, layerDepth);
             }
-        }
-
-        /// <summary>
-        /// Metoden til at flytte wizarden øjeblikkeligt. Bruges fx til at sætte startpositionen.
-        /// </summary>
-        public void MoveTo(Vector2 newPosition)
-        {
-            CurrentState = WizardState.Running;
-            Position = newPosition;
         }
     }
 

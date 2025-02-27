@@ -16,6 +16,8 @@ namespace DAlgorithms.Classes.World
         Forest,
         NoMonster,
         Monster,
+        IceKey,
+        StormKey,
         LockedStormTower,
         OpenStormTower,
         LockedIceTower,

@@ -48,11 +48,12 @@ namespace DAlgorithms.Classes.Algorithms
         /// Finder en sti fra start til target ved hjælp af DFS (iterativt med en stack).
         /// Returnerer en liste af noder, der udgør stien, eller en tom liste hvis ingen sti findes.
         /// </summary>
-        public List<Node<T>> FindPathDFS(T start, T target, Wizard wizard)
+        public List<Node<T>> FindPathDFS(T start, T target)
         {
             Node<T> startNode = Nodes.Find(n => n.Data.Equals(start));
             Node<T> targetNode = Nodes.Find(n => n.Data.Equals(target));
-            if (startNode == null || targetNode == null) throw new ArgumentException("Start- eller targetnode findes ikke.");
+            if (startNode == null || targetNode == null)
+                throw new ArgumentException("Start- eller targetnode findes ikke.");
 
             Stack<Node<T>> stack = new Stack<Node<T>>();
             Dictionary<Node<T>, Node<T>> parent = new Dictionary<Node<T>, Node<T>>();
@@ -75,21 +76,13 @@ namespace DAlgorithms.Classes.Algorithms
                     Node<T> neighbor = edge.To;
                     if (!visited.Contains(neighbor))
                     {
-                        if (IsEdgeAllowed(wizard, current, neighbor))
-                        {
-                            visited.Add(neighbor);
-                            parent[neighbor] = current;
-                            stack.Push(neighbor);
-                        }
+                        visited.Add(neighbor);
+                        parent[neighbor] = current;
+                        stack.Push(neighbor);
                     }
                 }
             }
             return new List<Node<T>>();
-        }
-
-        private bool IsEdgeAllowed(Wizard wizard, Node<T> from, Node<T> to)
-        {
-            return true;
         }
 
         // Hjælpefunktion til at rekonstruere stien ud fra parent-pegeren

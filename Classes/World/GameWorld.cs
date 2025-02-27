@@ -53,6 +53,10 @@ namespace DAlgorithms.Classes.World
         private Texture2D[] wizardIdleTexture = new Texture2D[4];
         private Texture2D[] wizardRunningTexture = new Texture2D[6];
 
+        //Variabler
+        public Tile randomTileForIceKey;
+        public Tile randomTileForStormKey;
+
         //Lists
         private List<Button> buttons = new List<Button>();
         private List<Key> keys = new List<Key>();
@@ -206,6 +210,8 @@ namespace DAlgorithms.Classes.World
                 case 'W': return TileType.Wall;
                 case 'P': return TileType.Path;
                 case 'F': return TileType.Forest;
+                case 'K': return TileType.IceKey;
+                case 'k': return TileType.StormKey;
                 case 'N': return TileType.NoMonster;
                 case 'M': return TileType.Monster;
                 case 'S': return TileType.LockedStormTower;
@@ -300,7 +306,7 @@ namespace DAlgorithms.Classes.World
         /// </summary>
         public void LoadTowers()
         {
-            int stormTileX = 7; // Justér efter hvor vi vil have dem
+            int stormTileX = 7;
             int stormTileY = 2;
             int iceTileX = 18;
             int iceTileY = 9;
@@ -334,7 +340,7 @@ namespace DAlgorithms.Classes.World
 
             Random random = new Random();
             int randomTile = random.Next(walkableTiles.Count);
-            Tile randomTileForIceKey = walkableTiles[randomTile];
+            randomTileForIceKey = walkableTiles[randomTile];
 
             //Placer nøglen i tile'ens center
             float iKeyX = randomTileForIceKey.Position.X + (randomTileForIceKey.Width / 2f) - (iceTowerKeyTexture[0].Width / 2f);
@@ -343,9 +349,10 @@ namespace DAlgorithms.Classes.World
             iceKey = new Key(TowerType.Ice, new Vector2(iKeyX, iKeyY), iceTowerKeyTexture);
             keys.Add(iceKey);
             nodePositions["IceKey"] = new Point((int)iKeyX, (int)iKeyY);
+            tileMap.SetTileType((int)iKeyX, (int)iKeyY, TileType.IceKey);
 
             randomTile = random.Next(walkableTiles.Count);
-            Tile randomTileForStormKey = walkableTiles[randomTile];
+            randomTileForStormKey = walkableTiles[randomTile];
 
             float sKeyX = randomTileForStormKey.Position.X + (randomTileForStormKey.Width / 2f) - (stormTowerKeyTexture[0].Width / 2f);
             float sKeyY = randomTileForStormKey.Position.Y + (randomTileForStormKey.Height / 2f) - (stormTowerKeyTexture[0].Height / 2f);
@@ -353,6 +360,7 @@ namespace DAlgorithms.Classes.World
             stormKey = new Key(TowerType.Storm, new Vector2(sKeyX, sKeyY), stormTowerKeyTexture);
             keys.Add(stormKey);
             nodePositions["StormKey"] = new Point((int)sKeyX, (int)sKeyY);
+            tileMap.SetTileType((int)sKeyX, (int)sKeyY, TileType.StormKey);
         }
 
         public void LoadPortal()
@@ -372,8 +380,8 @@ namespace DAlgorithms.Classes.World
             int tileX = 2;
             int tileY = 11;
 
-            float xPos = tileX * 80 + 10 - wizardIdleTexture[0].Width / 2;
-            float yPos = tileY * 80 - 10 - wizardIdleTexture[0].Height / 2;
+            float xPos = tileX * tileWidth + 10 - wizardIdleTexture[0].Width / 2;
+            float yPos = tileY * tileHeight - 10 - wizardIdleTexture[0].Width / 2;
 
             Vector2 wizardPosition = new Vector2(xPos, yPos);
             wizard = new Wizard(wizardIdleTexture, wizardRunningTexture, wizardPosition);
@@ -481,72 +489,42 @@ namespace DAlgorithms.Classes.World
             //Fra Entrance
             graph.AddDirectedEdge("Start", "StormKey");
             graph.AddDirectedEdge("Start", "IceKey");
+            graph.AddEdge("StormKey", "IceKey");
         }
 
         private void UpdateGraphBasedOnProximity(Wizard wizard)
-        {
-            // Konverter wizardens position til tile‑indeks (hvis ikke allerede)
-            int wizTileX = (int)wizard.Position.X / tileWidth;
-            int wizTileY = (int)wizard.Position.Y / tileHeight;
-            Vector2 wizTilePos = new Vector2(wizTileX, wizTileY);
-
-            // Udregn afstanden til IceKey og StormKey – antag at nodePositions nu indeholder
-            // tile‑koordinater (eller pixelkoordinater, som vi omregner til tile‑indeks)
-            Point iceKeyPixel = nodePositions["IceKey"];
-            Point stormKeyPixel = nodePositions["StormKey"];
-
-            float distanceToIceKey = Vector2.Distance(wizTilePos, new Vector2(iceKeyPixel.X / tileWidth, iceKeyPixel.Y / tileHeight));
-            float distanceToStormKey = Vector2.Distance(wizTilePos, new Vector2(stormKeyPixel.X / tileWidth, stormKeyPixel.Y / tileHeight));
-
-            // Fjern eventuelt gamle kanter – her antages, at grafen startes frisk eller at
-            // du kan tilføje nye kanter uden at få duplikerede
-
-            // Nu tilføjes kanterne baseret på betingelser:
-            if (distanceToIceKey < distanceToStormKey)
+        {   
+            if(wizard.HasStormKey && wizard.HasIceKey)
             {
-                // Wizard er tættere på IceKey først:
-                // Rute: Start -> IceKey -> StormKey -> StormTower -> IceTower -> Exit
-                // (Bemærk: hvis kanterne allerede findes, skal du undgå at tilføje dem igen)
-                graph.AddDirectedEdge("Start", "IceKey");
-                graph.AddDirectedEdge("IceKey", "StormKey");
                 graph.AddDirectedEdge("StormKey", "StormTower");
-                graph.AddDirectedEdge("StormTower", "IceTower");
+                graph.AddDirectedEdge("StormTower", "IceKey");
+                graph.AddDirectedEdge("IceKey", "IceTower");
                 graph.AddDirectedEdge("IceTower", "Exit");
-            }
-            else
+            } 
+            else if(wizard.HasStormKey && !wizard.HasIceKey)
             {
-                // Wizard er tættere på StormKey først.
-                // Nu skal vi tjekke, om han er tættest på StormTower eller IceKey som næste skridt:
-                Point stormKeyPos = nodePositions["StormKey"];
-                Point stormTowerPos = nodePositions["StormTower"];
-                Point iceKeyPos = nodePositions["IceKey"];
+                Point stormKeyPoint = nodePositions["StormKey"];
+                Point iceKeyPoint = nodePositions["IceKey"];
 
-                float distanceStormKeyToStormTower = Vector2.Distance(
-                    new Vector2(stormKeyPos.X / tileWidth, stormKeyPos.Y / tileHeight),
-                    new Vector2(stormTowerPos.X / tileWidth, stormTowerPos.Y / tileHeight)
-                );
-                float distanceStormKeyToIceKey = Vector2.Distance(
-                    new Vector2(stormKeyPos.X / tileWidth, stormKeyPos.Y / tileHeight),
-                    new Vector2(iceKeyPos.X / tileWidth, iceKeyPos.Y / tileHeight)
-                );
+                Vector2 iceKeyPosition = new Vector2(iceKeyPoint.X / tileWidth, iceKeyPoint.Y / tileHeight);
+                Vector2 stormKeyPosition = new Vector2(stormKeyPoint.X / tileWidth, stormKeyPoint.Y / tileHeight);
 
-                if (distanceStormKeyToStormTower < distanceStormKeyToIceKey)
+                float distanceToIceKey = Vector2.Distance(stormKeyPosition, iceKeyPosition);
+                float distanceToStormTower = Vector2.Distance(stormKeyPosition, new Vector2(7, 2));
+
+                if(distanceToIceKey < distanceToStormTower)
                 {
-                    // Rute: Start -> StormKey -> StormTower -> IceKey -> IceTower -> Exit
-                    graph.AddDirectedEdge("Start", "StormKey");
-                    graph.AddDirectedEdge("StormKey", "StormTower");
-                    graph.AddDirectedEdge("StormTower", "IceKey");
-                    graph.AddDirectedEdge("IceKey", "IceTower");
-                    graph.AddDirectedEdge("IceTower", "Exit");
+                    graph.AddDirectedEdge("StormKey","IceKey");
+                    graph.AddDirectedEdge("IceKey","StormTower");
+                    graph.AddDirectedEdge("StormTower","IceTower");
+                    graph.AddDirectedEdge("IceTower","Exit");
                 }
                 else
                 {
-                    // Rute: Start -> StormKey -> IceKey -> StormTower -> IceTower -> Exit
-                    graph.AddDirectedEdge("Start", "StormKey");
-                    graph.AddDirectedEdge("StormKey", "IceKey");
-                    graph.AddDirectedEdge("IceKey", "StormTower");
-                    graph.AddDirectedEdge("StormTower", "IceTower");
-                    graph.AddDirectedEdge("IceTower", "Exit");
+                    graph.AddDirectedEdge("StormKey","StormTower");
+                    graph.AddDirectedEdge("StormTower","IceKey");
+                    graph.AddDirectedEdge("IceKey","IceTower");
+                    graph.AddDirectedEdge("IceTower","IceKey");
                 }
             }
         }
@@ -556,10 +534,7 @@ namespace DAlgorithms.Classes.World
         {
             if (graph == null) SetupGraph();
 
-            // Opdater grafen baseret på wizardens nuværende position og afstande
-            UpdateGraphBasedOnProximity(wizard);
-
-            List<Node<string>> path = graph.FindPathDFS("Start", "Exit", wizard);
+            List<Node<string>> path = graph.FindPathDFS("Start", "StormKey");
 
             if (path.Count == 0)
             {
@@ -575,27 +550,22 @@ namespace DAlgorithms.Classes.World
                 }
             }
 
-            List<Tile> tilePath = new List<Tile>();
-            foreach (var node in path)
-            {
-                if (nodePositions.ContainsKey(node.Data))
-                {
-                    Point pixelPos = nodePositions[node.Data];
-                    int tileIndexX = pixelPos.X / tileWidth;
-                    int tileIndexY = pixelPos.Y / tileHeight;
-                    tilePath.Add(tileMap.GetTile(tileIndexX, tileIndexY));
-                }
-            }
-
             // Start bevægelse langs stien
-            wizard.StartPathMovement(tilePath);
+
+            //Når wizard rammer noden StormKey så sættes boolean HasStormKey til true
 
             // Opdater tårn-tilstande hvis nødvendigt
             if (wizard.HasStormKey)
             {
-                Point stormTilePos = nodePositions["StormTower"];
-                tileMap.SetTileType(stormTilePos.X, stormTilePos.Y, TileType.OpenStormTower);
+                tileMap.SetTileType(7, 2, TileType.OpenStormTower);
+                wizard.HasPotion = true;
+                wizard.VisitedStormTower = true;
+                UpdateGraphBasedOnProximity(wizard);
+                List<Node<string>> newPath = graph.FindPathDFS("StormKey","Exit");
             }
+
+            //Når wizard rammer node til IceKey så sættes boolean HasIceKey til true
+
             if (wizard.HasIceKey && wizard.HasPotion)
             {
                 Point iceTilePos = nodePositions["IceTower"];
