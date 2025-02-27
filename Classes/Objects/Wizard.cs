@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using DAlgorithms.Classes.World;
 using System.Diagnostics;
+using System;
 
 namespace DAlgorithms.Classes.Objects
 {
@@ -31,7 +32,7 @@ namespace DAlgorithms.Classes.Objects
         // Bevægelsesfelter
         public List<Vector2> pathPositions = new List<Vector2>();
         public int currentTargetIndex = 0;
-        private float movementSpeed = 100f; // Pixels per sekund
+        private float movementSpeed = 200f; // Pixels per sekund
 
         private TileMap tileMap;
         private GameWorld gameWorld; // Reference til GameWorld for at kalde RunDFS()
@@ -45,42 +46,67 @@ namespace DAlgorithms.Classes.Objects
             Position = position;
         }
 
-        public void Update(GameTime gameTime)
+        /// <summary>
+        /// Starter bevægelse langs en given sti. Stien skal være en liste af Tile-objekter.
+        /// Vi beregner her tile-center for hvert element og gemmer dem som mål.
+        /// </summary>
+        /// <param name="tilePath">Stien som en liste af Tiles.</param>
+        public void StartPathMovement(List<Tile> tilePath)
+        {
+            if (tilePath == null || tilePath.Count == 0) return;
+
+            // Omdan stien til en liste af positioner (tile-centre)
+            pathPositions = new List<Vector2>();
+            foreach (var tile in tilePath)
+            {
+                Vector2 targetPos = new Vector2(tile.Position.X + tile.Width / 2f - (idleFrames[0].Width / 2f), tile.Position.Y + tile.Height / 2f - (idleFrames[0].Height / 2f));
+                pathPositions.Add(targetPos);
+            }
+
+            currentTargetIndex = 0;
+            // Skift til Running state
+            CurrentState = WizardState.Running;
+        }
+
+        public void Update(GameTime gameTime, List<Key> keys, Action<Key> onKeyCollected, Action onDestinationReached)
         {
             timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (timer >= frameTime)
             {
                 timer = 0f;
                 animationIndex++;
-                animationIndex %= (CurrentState == WizardState.Idle ? idleFrames.Length : runFrames.Length);
-            }
-
-            MoveAlongPath(gameTime);
-        }
-
-        private void MoveAlongPath(GameTime gameTime)
-        {
-            if (pathPositions.Count == 0 || currentTargetIndex >= pathPositions.Count)
-                return;
-
-            Vector2 target = pathPositions[currentTargetIndex];
-            Vector2 direction = target - Position;
-
-            if (direction.Length() < 1f) // Wizard har nået en tile
-            {
-                HandleTileInteraction(target);
-                currentTargetIndex++;
-
-                if (currentTargetIndex >= pathPositions.Count)
+                switch (CurrentState)
                 {
-                    pathPositions.Clear();
-                    CurrentState = WizardState.Idle;
+                    case WizardState.Idle:
+                        animationIndex %= idleFrames.Length;
+                        break;
+                    case WizardState.Running:
+                        animationIndex %= runFrames.Length;
+                        break;
                 }
             }
-            else
+
+            if (pathPositions != null && currentTargetIndex < pathPositions.Count)
             {
-                direction.Normalize();
-                Position += direction * movementSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                Vector2 target = pathPositions[currentTargetIndex];
+                Vector2 direction = target - Position;
+                float distance = direction.Length();
+
+                if (distance < 1f)
+                {
+                    currentTargetIndex++;
+                    if (currentTargetIndex >= pathPositions.Count)
+                    {
+                        pathPositions = null;
+                        CurrentState = WizardState.Idle;
+                        onDestinationReached?.Invoke();
+                    }
+                }
+                else
+                {
+                    direction.Normalize();
+                    Position += direction * movementSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                }
             }
         }
 
