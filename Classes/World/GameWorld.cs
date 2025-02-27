@@ -286,6 +286,7 @@ namespace DAlgorithms.Classes.World
 
         private void OnAStar_Click(object sender, EventArgs e)
         {
+            Debug.WriteLine("Du har nu klikket på A* knap");
             RunAStar();
         }
 
@@ -322,37 +323,36 @@ namespace DAlgorithms.Classes.World
             {
                 for (int y = 0; y < layout.GetLength(1); y++)
                 {
-                    Tile walkableTile = tileMap.GetTile(x, y);
-                    if (walkableTile.IsWalkable == true)
+                    Tile tile = tileMap.GetTile(x, y);
+                    if (tile.IsWalkable)
                     {
-                        walkableTiles.Add(walkableTile);
+                        walkableTiles.Add(tile);
                     }
                 }
             }
 
-            //Keys placering
-
             Random random = new Random();
-            int randomTile = random.Next(walkableTiles.Count);
-            Tile randomTileForIceKey = walkableTiles[randomTile];
 
-            //Placer nøglen i tile'ens center
-            float iKeyX = randomTileForIceKey.Position.X + (randomTileForIceKey.Width / 2f) - (iceTowerKeyTexture[0].Width / 2f);
-            float iKeyY = randomTileForIceKey.Position.Y + (randomTileForIceKey.Height / 2f) - (iceTowerKeyTexture[0].Height / 2f);
+            // Placer Ice Key
+            Tile randomTileForIceKey = walkableTiles[random.Next(walkableTiles.Count)];
+            int iKeyX = (int)(randomTileForIceKey.Position.X);
+            int iKeyY = (int)(randomTileForIceKey.Position.Y);
 
             iceKey = new Key(TowerType.Ice, new Vector2(iKeyX, iKeyY), iceTowerKeyTexture);
             keys.Add(iceKey);
-            nodePositions["IceKey"] = new Point((int)iKeyX, (int)iKeyY);
+            nodePositions["IceKey"] = new Point(iKeyX / tileWidth, iKeyY / tileHeight);
 
-            randomTile = random.Next(walkableTiles.Count);
-            Tile randomTileForStormKey = walkableTiles[randomTile];
-
-            float sKeyX = randomTileForStormKey.Position.X + (randomTileForStormKey.Width / 2f) - (stormTowerKeyTexture[0].Width / 2f);
-            float sKeyY = randomTileForStormKey.Position.Y + (randomTileForStormKey.Height / 2f) - (stormTowerKeyTexture[0].Height / 2f);
+            // Placer Storm Key
+            Tile randomTileForStormKey = walkableTiles[random.Next(walkableTiles.Count)];
+            int sKeyX = (int)(randomTileForStormKey.Position.X);
+            int sKeyY = (int)(randomTileForStormKey.Position.Y);
 
             stormKey = new Key(TowerType.Storm, new Vector2(sKeyX, sKeyY), stormTowerKeyTexture);
             keys.Add(stormKey);
-            nodePositions["StormKey"] = new Point((int)sKeyX, (int)sKeyY);
+            nodePositions["StormKey"] = new Point(sKeyX / tileWidth, sKeyY / tileHeight);
+
+            Debug.WriteLine($"Storm Key placeret på: {sKeyX / tileWidth}, {sKeyY / tileHeight}");
+            Debug.WriteLine($"Ice Key placeret på: {iKeyX / tileWidth}, {iKeyY / tileHeight}");
         }
 
         public void LoadPortal()
@@ -396,26 +396,25 @@ namespace DAlgorithms.Classes.World
         /// <param name="gameTime">Spillets tidsdata.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Luk spil med ESC
             if (Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
-            // Opdater knapper
             foreach (Button btn in buttons)
             {
                 btn.Update(gameTime);
             }
 
-            // Opdater keys            
-            foreach (Key key in keys)
-            {
-                key.Update(gameTime);
-            }
-
             portal.Update(gameTime);
-            wizard.Update(gameTime);
+
+            // 🚀 Fjern keys, når wizarden samler dem op
+            wizard.Update(gameTime, keys, key =>
+            {
+                Debug.WriteLine($"Key fjernet fra spillet: {key.TowerType}");
+            }, RunAStar);
 
             base.Update(gameTime);
         }
+
+
 
         /// <summary>
         /// Tegner spillets elementer pr. frame.
@@ -474,44 +473,35 @@ namespace DAlgorithms.Classes.World
 
         private Point GetNextGoal()
         {
-            Point goalPixelPos;
-
-            if (!wizard.HasStormKey)
+            if (!wizard.HasStormKey && keys.Exists(k => k.TowerType == TowerType.Storm && !k.IsCollected))
             {
                 Debug.WriteLine("Wizard skal hente Storm Key");
-                goalPixelPos = nodePositions["StormKey"];
+                return nodePositions["StormKey"];
             }
-            else if (!wizard.HasIceKey)
+            else if (!wizard.HasIceKey && keys.Exists(k => k.TowerType == TowerType.Ice && !k.IsCollected))
             {
                 Debug.WriteLine("Wizard skal hente Ice Key");
-                goalPixelPos = nodePositions["IceKey"];
+                return nodePositions["IceKey"];
             }
             else if (!wizard.HasPotion)
             {
                 Debug.WriteLine("Wizard skal til Storm Tower for potion");
-                goalPixelPos = nodePositions["StormTower"];
+                return nodePositions["StormTower"];
             }
             else if (!wizard.VisitedIceTower)
             {
                 Debug.WriteLine("Wizard skal til Ice Tower for at aflevere potion");
-                goalPixelPos = nodePositions["IceTower"];
+                return nodePositions["IceTower"];
             }
             else
             {
                 Debug.WriteLine("Wizard skal tilbage til portalen");
-                goalPixelPos = nodePositions["Exit"];
+                return nodePositions["Exit"];
             }
-
-            // Debug udskrift for at se de rigtige pixelkoordinater
-            Debug.WriteLine($"Pixel Goal Position: {goalPixelPos.X}, {goalPixelPos.Y}");
-
-            // Konverter pixel-koordinater til tile-koordinater
-            Point goalTilePos = new Point(goalPixelPos.X / tileWidth, goalPixelPos.Y / tileHeight);
-
-            Debug.WriteLine($"Konverteret Goal Position: {goalTilePos.X}, {goalTilePos.Y}");
-
-            return goalTilePos;
         }
+
+
+
 
         private void RunAStar()
         {
@@ -565,11 +555,41 @@ namespace DAlgorithms.Classes.World
                 Debug.WriteLine("Mål-tile er ikke walkable!");
             }
 
-            Debug.WriteLine("TileDict indeholder følgende keys:");
-            foreach (var key in tileDict.Keys)
+            if (!tileDict.ContainsKey(goalPos))
             {
-                Debug.WriteLine($"Tile: {key.X}, {key.Y}");
+                Debug.WriteLine($"FEJL: Goal Tile Position {goalPos.X}, {goalPos.Y} findes IKKE i tileDict!");
+                return;
             }
+
+            if (!tileDict[goalPos].IsWalkable)
+            {
+                Debug.WriteLine($"FEJL: Goal Tile Position {goalPos.X}, {goalPos.Y} er IKKE walkable!");
+                return;
+            }
+
+            Debug.WriteLine("TileMap Walkable Status:");
+            for (int x = 0; x < layout.GetLength(0); x++)
+            {
+                string row = "";
+                for (int y = 0; y < layout.GetLength(1); y++)
+                {
+                    row += tileMap.GetTile(x, y).IsWalkable ? "O " : "X ";
+                }
+                Debug.WriteLine(row);
+            }
+
+            if (!tileDict.ContainsKey(goalPos) || !tileDict[goalPos].IsWalkable)
+            {
+                Debug.WriteLine($"FEJL: Goal Tile Position {goalPos.X}, {goalPos.Y} er IKKE walkable!");
+                return;
+            }
+
+
+            //Debug.WriteLine("TileDict indeholder følgende keys:");
+            //foreach (var key in tileDict.Keys)
+            //{
+            //    Debug.WriteLine($"Tile: {key.X}, {key.Y}");
+            //}
 
         }
 

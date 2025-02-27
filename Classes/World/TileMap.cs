@@ -19,13 +19,21 @@ namespace DAlgorithms.Classes.World
 
         public Tile GetTile(int x, int y)
         {
-            // Tjek om indekserne er inden for arrayets grænser
+
             if (x < 0 || x >= tiles.GetLength(0) || y < 0 || y >= tiles.GetLength(1))
             {
-                Debug.WriteLine($"GetTile fejlede: x={x}, y={y} - gyldige intervaller: 0-{tiles.GetLength(0) - 1} og 0-{tiles.GetLength(1) - 1}");
-                throw new IndexOutOfRangeException("Index was outside the bounds of the array.");
+                Debug.WriteLine($"FEJL: GetTile out of bounds! x={x}, y={y}");
+                return null; // Returner null for at undgå fejl
             }
             return tiles[x, y];
+
+            // Tjek om indekserne er inden for arrayets grænser
+            //if (x < 0 || x >= tiles.GetLength(0) || y < 0 || y >= tiles.GetLength(1))
+            //{
+            //    Debug.WriteLine($"GetTile fejlede: x={x}, y={y} - gyldige intervaller: 0-{tiles.GetLength(0) - 1} og 0-{tiles.GetLength(1) - 1}");
+            //    throw new IndexOutOfRangeException("Index was outside the bounds of the array.");
+            //}
+            //return tiles[x, y];
         }
 
         /// <summary>
@@ -89,7 +97,7 @@ namespace DAlgorithms.Classes.World
                     oldTile.SetSourceRectangle(18, 0, 18, 18);
                     break;
                 case TileType.Forest:
-                    oldTile.IsWalkable = true;
+                    oldTile.IsWalkable = false;
                     oldTile.SetSourceRectangle(0, 0, 18, 18);
                     break;
                 case TileType.NoMonster:

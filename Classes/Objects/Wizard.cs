@@ -2,7 +2,10 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace DAlgorithms.Classes.Objects
 {
@@ -62,9 +65,8 @@ namespace DAlgorithms.Classes.Objects
             CurrentState = WizardState.Running;
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, List<Key> keys, Action<Key> onKeyCollected, Action onDestinationReached)
         {
-            // Opdater animationen
             timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (timer >= frameTime)
             {
@@ -81,33 +83,78 @@ namespace DAlgorithms.Classes.Objects
                 }
             }
 
-            // Hvis vi har en sti, flyt mod næste mål
             if (pathPositions != null && currentTargetIndex < pathPositions.Count)
             {
                 Vector2 target = pathPositions[currentTargetIndex];
-                // Beregn retning og afstand
                 Vector2 direction = target - Position;
                 float distance = direction.Length();
 
                 if (distance < 1f)
                 {
-                    // Vi er nået til mål, skift til næste
                     currentTargetIndex++;
                     if (currentTargetIndex >= pathPositions.Count)
                     {
-                        // Færdig bevægelse
                         pathPositions = null;
                         CurrentState = WizardState.Idle;
+                        onDestinationReached?.Invoke();
                     }
                 }
                 else
                 {
                     direction.Normalize();
-                    // Flyt med hastighed * deltaTime
                     Position += direction * movementSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 }
             }
+
+            // 🚀 Sørg for at fjerne keys og fortsætte
+            CheckForKeyPickup(keys, onKeyCollected);
         }
+
+
+
+
+        private void CheckForKeyPickup(List<Key> keys, Action<Key> onKeyCollected)
+        {
+            for (int i = keys.Count - 1; i >= 0; i--) // Gå baglæns for at kunne fjerne keys sikkert
+            {
+                Key key = keys[i];
+
+                // 🚀 Tjek om wizarden er på samme tile som key
+                if (!key.IsCollected && Vector2.Distance(Position, key.Position) < 40f)
+                {
+                    key.IsCollected = true;
+
+                    if (key.TowerType == TowerType.Storm)
+                    {
+                        HasStormKey = true;
+                        Debug.WriteLine("Wizarden har samlet Storm Key op!");
+
+                        // 🚀 Gør Storm Tower walkable
+                        Point stormTowerTile = GameWorld.nodePositions["StormTower"];
+                        GameWorld.tileMap.SetTileType(stormTowerTile.X, stormTowerTile.Y, TileType.OpenStormTower);
+                    }
+
+                    else if (key.TowerType == TowerType.Ice)
+                    {
+                        HasIceKey = true;
+                        Debug.WriteLine("Wizarden har samlet Ice Key op!");
+                    }
+
+                    // 🚀 Fjern key-objektet fra spillet
+                    onKeyCollected?.Invoke(key);
+                    keys.RemoveAt(i);
+                    Debug.WriteLine("Key fjernet fra spillet");
+
+                    return; // Stop loopet efter første fundne nøgle
+                }
+            }
+        }
+
+
+
+
+
+
 
         public void Draw(SpriteBatch spriteBatch, float layerDepth)
         {

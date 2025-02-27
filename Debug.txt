@@ -1,0 +1,383 @@
+'DAlgorithms.exe' (CoreCLR: DefaultDomain): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36\System.Private.CoreLib.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'D:\Github Repos\DAlrithms\bin\Debug\net6.0-windows\DAlgorithms.dll'. Symbols loaded.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36\System.Runtime.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'c:\program files\microsoft visual studio\2022\community\common7\ide\commonextensions\microsoft\hotreload\Microsoft.Extensions.DotNetDeltaApplier.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36\System.IO.Pipes.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36\System.Linq.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36\System.Collections.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36\System.Console.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36\System.Threading.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36\System.Threading.Overlapped.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36\System.Security.Principal.Windows.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36\System.Security.AccessControl.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36\System.Runtime.InteropServices.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36\System.Security.Claims.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36\Microsoft.Win32.Primitives.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36\System.Runtime.Loader.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'D:\Github Repos\DAlrithms\bin\Debug\net6.0-windows\MonoGame.Framework.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'D:\Github Repos\DAlrithms\bin\Debug\net6.0-windows\SharpDX.DXGI.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36\System.Collections.Concurrent.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'D:\Github Repos\DAlrithms\bin\Debug\net6.0-windows\SharpDX.Direct3D11.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36\System.ComponentModel.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36\System.Drawing.Primitives.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\6.0.36\System.Windows.Forms.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36\System.ComponentModel.Primitives.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\6.0.36\System.Windows.Forms.Primitives.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36\System.Collections.Specialized.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36\System.ComponentModel.TypeConverter.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\6.0.36\System.Drawing.Common.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36\System.Diagnostics.TraceSource.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36\System.ComponentModel.EventBasedAsync.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36\System.Threading.Thread.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\6.0.36\Accessibility.dll'. Module was built without symbols.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\6.0.36\Microsoft.Win32.SystemEvents.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'D:\Github Repos\DAlrithms\bin\Debug\net6.0-windows\SharpDX.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36\System.Reflection.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36\System.Private.Uri.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36\System.Text.Encoding.Extensions.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36\System.Text.RegularExpressions.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+Storm Key placeret på: 13, 11
+Ice Key placeret på: 14, 3
+Wizard startposition (pixels): 184, 904
+Wizard startposition (tiles): 2, 11
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36\System.Collections.NonGeneric.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+Du har nu klikket på A* knap
+Wizard skal hente Storm Key
+Start Pos: 2, 11
+Goal Pos: 13, 11
+Nabo tile (2, 10) er IKKE walkable!
+Nabo tile (2, 12) er IKKE walkable!
+Nabo tile (1, 11) er IKKE walkable!
+Antal naboer fundet: 1
+Nabo tile (3, 10) er IKKE walkable!
+Nabo tile (3, 12) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (4, 10) er IKKE walkable!
+Nabo tile (4, 12) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (5, 10) er IKKE walkable!
+Nabo tile (5, 12) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (6, 10) er IKKE walkable!
+Nabo tile (6, 12) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (7, 12) er IKKE walkable!
+Antal naboer fundet: 3
+Antal naboer fundet: 4
+Antal naboer fundet: 4
+Antal naboer fundet: 4
+Antal naboer fundet: 4
+Antal naboer fundet: 4
+Sti fundet! Længde: 12
+TileMap Walkable Status:
+X X X X X X X X X X X X X X 
+X X X X X X X X X X X X X X 
+X X X X X X X X X X X O X X 
+X X X X X X X X X X X O X X 
+X X X X X X X X X X X O X X 
+X X X X X X X X X X X O X X 
+X X X X X X X X X X X O X X 
+X X X O O O O O O O O O X X 
+X X X O X X X X X X O O O X 
+X X X O X X X X X X O O O X 
+X X X O X X X X X X O O O X 
+X X X O X X X X X X O O O X 
+X X X O X X X X X X O O O X 
+X X X O X X X X X X O O O X 
+X X X O X X X X X X O O O X 
+X X X O X X X X X X O O O X 
+X X X O X X X X X X O O O X 
+X X X O X X X X X X O O O X 
+X X X O O O O O O X O O X X 
+X X X X X X X X O O O X X X 
+X X X X X X X X X X X X X X 
+X X X X X X X X X X X X X X 
+X X X X X X X X X X X X X X 
+X X X X X X X X X X X X X X 
+X X X X X X X X X X X X X X 
+Wizarden har samlet Storm Key op!
+Key fjernet fra spillet: Storm
+Key fjernet fra spillet
+Wizard skal hente Ice Key
+Start Pos: 13, 11
+Goal Pos: 14, 3
+Antal naboer fundet: 4
+Nabo tile (13, 9) er IKKE walkable!
+Antal naboer fundet: 3
+Nabo tile (14, 9) er IKKE walkable!
+Antal naboer fundet: 3
+Antal naboer fundet: 4
+Nabo tile (15, 9) er IKKE walkable!
+Antal naboer fundet: 3
+Nabo tile (12, 9) er IKKE walkable!
+Antal naboer fundet: 3
+Antal naboer fundet: 4
+Nabo tile (14, 13) er IKKE walkable!
+Antal naboer fundet: 3
+Nabo tile (16, 9) er IKKE walkable!
+Antal naboer fundet: 3
+Nabo tile (13, 13) er IKKE walkable!
+Antal naboer fundet: 3
+Antal naboer fundet: 4
+Nabo tile (11, 9) er IKKE walkable!
+Antal naboer fundet: 3
+Antal naboer fundet: 4
+Nabo tile (15, 13) er IKKE walkable!
+Antal naboer fundet: 3
+Nabo tile (17, 9) er IKKE walkable!
+Antal naboer fundet: 3
+Nabo tile (12, 13) er IKKE walkable!
+Antal naboer fundet: 3
+Antal naboer fundet: 4
+Nabo tile (10, 9) er IKKE walkable!
+Antal naboer fundet: 3
+Antal naboer fundet: 4
+Nabo tile (16, 13) er IKKE walkable!
+Antal naboer fundet: 3
+Nabo tile (18, 9) er IKKE walkable!
+Antal naboer fundet: 3
+Nabo tile (11, 13) er IKKE walkable!
+Antal naboer fundet: 3
+Antal naboer fundet: 4
+Nabo tile (9, 9) er IKKE walkable!
+Antal naboer fundet: 3
+Nabo tile (19, 11) er IKKE walkable!
+Nabo tile (18, 12) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (18, 12) er IKKE walkable!
+Nabo tile (17, 13) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (20, 10) er IKKE walkable!
+Nabo tile (19, 11) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (20, 9) er IKKE walkable!
+Nabo tile (18, 9) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (19, 7) er IKKE walkable!
+Nabo tile (20, 8) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (18, 9) er IKKE walkable!
+Nabo tile (17, 8) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (19, 7) er IKKE walkable!
+Nabo tile (17, 7) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (19, 6) er IKKE walkable!
+Nabo tile (17, 6) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (19, 5) er IKKE walkable!
+Nabo tile (17, 5) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (19, 4) er IKKE walkable!
+Nabo tile (17, 4) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (18, 2) er IKKE walkable!
+Nabo tile (19, 3) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (17, 2) er IKKE walkable!
+Nabo tile (17, 4) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (16, 2) er IKKE walkable!
+Nabo tile (16, 4) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (15, 2) er IKKE walkable!
+Nabo tile (15, 4) er IKKE walkable!
+Antal naboer fundet: 2
+Sti fundet! Længde: 20
+TileMap Walkable Status:
+X X X X X X X X X X X X X X 
+X X X X X X X X X X X X X X 
+X X X X X X X X X X X O X X 
+X X X X X X X X X X X O X X 
+X X X X X X X X X X X O X X 
+X X X X X X X X X X X O X X 
+X X X X X X X X X X X O X X 
+X X X O O O O O O O O O X X 
+X X X O X X X X X X O O O X 
+X X X O X X X X X X O O O X 
+X X X O X X X X X X O O O X 
+X X X O X X X X X X O O O X 
+X X X O X X X X X X O O O X 
+X X X O X X X X X X O O O X 
+X X X O X X X X X X O O O X 
+X X X O X X X X X X O O O X 
+X X X O X X X X X X O O O X 
+X X X O X X X X X X O O O X 
+X X X O O O O O O X O O X X 
+X X X X X X X X O O O X X X 
+X X X X X X X X X X X X X X 
+X X X X X X X X X X X X X X 
+X X X X X X X X X X X X X X 
+X X X X X X X X X X X X X X 
+X X X X X X X X X X X X X X 
+Wizarden har samlet Ice Key op!
+Key fjernet fra spillet: Ice
+Key fjernet fra spillet
+Wizard skal til Storm Tower for potion
+Start Pos: 14, 3
+Goal Pos: 2, 7
+Nabo tile (14, 2) er IKKE walkable!
+Nabo tile (14, 4) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (13, 2) er IKKE walkable!
+Nabo tile (13, 4) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (12, 2) er IKKE walkable!
+Nabo tile (12, 4) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (11, 2) er IKKE walkable!
+Nabo tile (11, 4) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (10, 2) er IKKE walkable!
+Nabo tile (10, 4) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (9, 2) er IKKE walkable!
+Nabo tile (9, 4) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (8, 2) er IKKE walkable!
+Nabo tile (8, 4) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (7, 2) er IKKE walkable!
+Nabo tile (6, 3) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (8, 4) er IKKE walkable!
+Nabo tile (6, 4) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (8, 5) er IKKE walkable!
+Nabo tile (6, 5) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (8, 6) er IKKE walkable!
+Nabo tile (6, 6) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (8, 7) er IKKE walkable!
+Nabo tile (6, 7) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (8, 8) er IKKE walkable!
+Nabo tile (6, 8) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (8, 9) er IKKE walkable!
+Nabo tile (6, 9) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (6, 10) er IKKE walkable!
+Antal naboer fundet: 3
+Nabo tile (8, 9) er IKKE walkable!
+Antal naboer fundet: 3
+Nabo tile (7, 12) er IKKE walkable!
+Antal naboer fundet: 3
+Nabo tile (6, 10) er IKKE walkable!
+Nabo tile (6, 12) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (5, 10) er IKKE walkable!
+Nabo tile (5, 12) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (4, 10) er IKKE walkable!
+Nabo tile (4, 12) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (3, 10) er IKKE walkable!
+Nabo tile (3, 12) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (2, 10) er IKKE walkable!
+Nabo tile (2, 12) er IKKE walkable!
+Nabo tile (1, 11) er IKKE walkable!
+Antal naboer fundet: 1
+Nabo tile (9, 9) er IKKE walkable!
+Antal naboer fundet: 3
+Antal naboer fundet: 4
+Nabo tile (10, 9) er IKKE walkable!
+Antal naboer fundet: 3
+Antal naboer fundet: 4
+Nabo tile (8, 13) er IKKE walkable!
+Nabo tile (7, 12) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (11, 9) er IKKE walkable!
+Antal naboer fundet: 3
+Antal naboer fundet: 4
+Nabo tile (9, 13) er IKKE walkable!
+Antal naboer fundet: 3
+Nabo tile (12, 9) er IKKE walkable!
+Antal naboer fundet: 3
+Antal naboer fundet: 4
+Nabo tile (10, 13) er IKKE walkable!
+Antal naboer fundet: 3
+Nabo tile (13, 9) er IKKE walkable!
+Antal naboer fundet: 3
+Antal naboer fundet: 4
+Nabo tile (11, 13) er IKKE walkable!
+Antal naboer fundet: 3
+Nabo tile (14, 9) er IKKE walkable!
+Antal naboer fundet: 3
+Antal naboer fundet: 4
+Nabo tile (12, 13) er IKKE walkable!
+Antal naboer fundet: 3
+Nabo tile (15, 9) er IKKE walkable!
+Antal naboer fundet: 3
+Antal naboer fundet: 4
+Nabo tile (13, 13) er IKKE walkable!
+Antal naboer fundet: 3
+Nabo tile (15, 2) er IKKE walkable!
+Nabo tile (15, 4) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (16, 9) er IKKE walkable!
+Antal naboer fundet: 3
+Antal naboer fundet: 4
+Nabo tile (14, 13) er IKKE walkable!
+Antal naboer fundet: 3
+Nabo tile (16, 2) er IKKE walkable!
+Nabo tile (16, 4) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (17, 9) er IKKE walkable!
+Antal naboer fundet: 3
+Antal naboer fundet: 4
+Nabo tile (15, 13) er IKKE walkable!
+Antal naboer fundet: 3
+Nabo tile (17, 2) er IKKE walkable!
+Nabo tile (17, 4) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (18, 9) er IKKE walkable!
+Antal naboer fundet: 3
+Antal naboer fundet: 4
+Nabo tile (16, 13) er IKKE walkable!
+Antal naboer fundet: 3
+Nabo tile (18, 2) er IKKE walkable!
+Nabo tile (19, 3) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (19, 4) er IKKE walkable!
+Nabo tile (17, 4) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (19, 5) er IKKE walkable!
+Nabo tile (17, 5) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (19, 6) er IKKE walkable!
+Nabo tile (17, 6) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (19, 7) er IKKE walkable!
+Nabo tile (17, 7) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (18, 9) er IKKE walkable!
+Nabo tile (17, 8) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (19, 7) er IKKE walkable!
+Nabo tile (20, 8) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (20, 9) er IKKE walkable!
+Nabo tile (18, 9) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (20, 10) er IKKE walkable!
+Nabo tile (19, 11) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (19, 11) er IKKE walkable!
+Nabo tile (18, 12) er IKKE walkable!
+Antal naboer fundet: 2
+Nabo tile (18, 12) er IKKE walkable!
+Nabo tile (17, 13) er IKKE walkable!
+Antal naboer fundet: 2
+Ingen sti fundet!
+Mål-tile er ikke walkable!
+FEJL: Goal Tile Position 2, 7 er IKKE walkable!
+Exception thrown: 'System.IndexOutOfRangeException' in DAlgorithms.dll
+An unhandled exception of type 'System.IndexOutOfRangeException' occurred in DAlgorithms.dll
+Index was outside the bounds of the array.
+
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\PrivateAssemblies\Runtime\Microsoft.VisualStudio.Debugger.Runtime.NetCoreApp.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+'DAlgorithms.exe' (CoreCLR: clrhost): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36\netstandard.dll'. Skipped loading symbols. Module is optimized and the debugger option 'Just My Code' is enabled.
+The program '[7684] DAlgorithms.exe' has exited with code 4294967295 (0xffffffff).

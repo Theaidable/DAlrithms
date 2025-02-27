@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using DAlgorithms.Classes.World;
+using System.Diagnostics;
 
 namespace DAlgorithms.Classes.Algorithms
 {
@@ -130,19 +131,34 @@ namespace DAlgorithms.Classes.Algorithms
         private List<Tile> GetNeighbors(Tile tile)
         {
             var result = new List<Tile>();
-            // Tjek 4 retninger (op, ned, venstre, højre)
+
             for (int i = 0; i < directionsX.Length; i++)
             {
-                int nx = (int)tile.Position.X + directionsX[i];
-                int ny = (int)tile.Position.Y + directionsY[i];
+                int nx = (int)(tile.Position.X / 80) + directionsX[i];
+                int ny = (int)(tile.Position.Y / 80) + directionsY[i];
+
                 Point neighborPos = new Point(nx, ny);
 
-                // Tjek om neighbor er inden for grid
                 if (tiles.ContainsKey(neighborPos))
                 {
-                    result.Add(tiles[neighborPos]);
+                    Tile neighbor = tiles[neighborPos];
+
+                    if (neighbor.IsWalkable)
+                    {
+                        result.Add(neighbor);
+                    }
+                    else
+                    {
+                        Debug.WriteLine($"Nabo tile ({nx}, {ny}) er IKKE walkable!");
+                    }
+                }
+                else
+                {
+                    Debug.WriteLine($"Nabo tile ({nx}, {ny}) findes IKKE i tileDict!");
                 }
             }
+
+            Debug.WriteLine($"Antal naboer fundet: {result.Count}");
             return result;
         }
 
