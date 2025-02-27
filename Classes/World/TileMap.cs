@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
+using System;
 
 namespace DAlgorithms.Classes.World
 {
@@ -17,6 +19,12 @@ namespace DAlgorithms.Classes.World
 
         public Tile GetTile(int x, int y)
         {
+            // Tjek om indekserne er inden for arrayets grænser
+            if (x < 0 || x >= tiles.GetLength(0) || y < 0 || y >= tiles.GetLength(1))
+            {
+                Debug.WriteLine($"GetTile fejlede: x={x}, y={y} - gyldige intervaller: 0-{tiles.GetLength(0) - 1} og 0-{tiles.GetLength(1) - 1}");
+                throw new IndexOutOfRangeException("Index was outside the bounds of the array.");
+            }
             return tiles[x, y];
         }
 
@@ -84,9 +92,40 @@ namespace DAlgorithms.Classes.World
                     oldTile.IsWalkable = false;
                     oldTile.SetSourceRectangle(0, 0, 18, 18);
                     break;
+                case TileType.NoMonster:
+                    oldTile.IsWalkable = true;
+                    oldTile.SetSourceRectangle(18, 0, 18, 18);
+                    break;
                 case TileType.Monster:
-                    oldTile.IsWalkable = true; // Start walkable, 
-                                               // Wizard can pass once, then set false
+                    oldTile.IsWalkable = false;
+                    oldTile.SetSourceRectangle(18, 0, 18, 18);
+                    break;
+                case TileType.LockedStormTower:
+                    oldTile.IsWalkable = false;
+                    oldTile.SetSourceRectangle(18, 0, 18, 18);
+                    break;
+                case TileType.OpenStormTower:
+                    oldTile.IsWalkable = true;
+                    oldTile.SetSourceRectangle(18, 0, 18, 18);
+                    break;
+                case TileType.LockedIceTower:
+                    oldTile.IsWalkable = false;
+                    oldTile.SetSourceRectangle(18, 0, 18, 18);
+                    break;
+                case TileType.OpenIceTower:
+                    oldTile.IsWalkable = true;
+                    oldTile.SetSourceRectangle(18, 0, 18, 18);
+                    break;
+                case TileType.LockedPortal:
+                    oldTile.IsWalkable = false;
+                    oldTile.SetSourceRectangle(18, 0, 18, 18);
+                    break;
+                case TileType.OpenPortal:
+                    oldTile.IsWalkable = true;
+                    oldTile.SetSourceRectangle(18, 0, 18, 18);
+                    break;
+                case TileType.Start:
+                    oldTile.IsWalkable = true;
                     oldTile.SetSourceRectangle(18, 0, 18, 18);
                     break;
             }

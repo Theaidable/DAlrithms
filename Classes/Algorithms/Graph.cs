@@ -1,6 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using DAlgorithms.Classes.Objects;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using SharpDX.MediaFoundation;
 using System;
 using System.Collections.Generic;
 
@@ -43,59 +45,14 @@ namespace DAlgorithms.Classes.Algorithms
         }
 
         /// <summary>
-        /// Finder en sti fra start til target ved hjælp af BFS.
-        /// Returnerer en liste af noder, der udgør stien.
-        /// Hvis ingen sti findes, returneres en tom liste.
-        /// </summary>
-        public List<Node<T>> FindPathBFS(T start, T target)
-        {
-            Node<T> startNode = Nodes.Find(n => n.Data.Equals(start));
-            Node<T> targetNode = Nodes.Find(n => n.Data.Equals(target));
-            if (startNode == null || targetNode == null)
-                throw new ArgumentException("Start- eller targetnode findes ikke.");
-
-            Queue<Node<T>> queue = new Queue<Node<T>>();
-            Dictionary<Node<T>, Node<T>> parent = new Dictionary<Node<T>, Node<T>>();
-            HashSet<Node<T>> visited = new HashSet<Node<T>>();
-
-            queue.Enqueue(startNode);
-            visited.Add(startNode);
-            parent[startNode] = null;
-
-            while (queue.Count > 0)
-            {
-                Node<T> current = queue.Dequeue();
-                if (current.Data.Equals(target))
-                {
-                    // Vi har fundet target – rekonstruer stien
-                    return ReconstructPath(parent, current);
-                }
-
-                foreach (Edge<T> edge in current.Edges)
-                {
-                    Node<T> neighbor = edge.To;
-                    if (!visited.Contains(neighbor))
-                    {
-                        visited.Add(neighbor);
-                        parent[neighbor] = current;
-                        queue.Enqueue(neighbor);
-                    }
-                }
-            }
-            // Ingen sti fundet
-            return new List<Node<T>>();
-        }
-
-        /// <summary>
         /// Finder en sti fra start til target ved hjælp af DFS (iterativt med en stack).
         /// Returnerer en liste af noder, der udgør stien, eller en tom liste hvis ingen sti findes.
         /// </summary>
-        public List<Node<T>> FindPathDFS(T start, T target)
+        public List<Node<T>> FindPathDFS(T start, T target, Wizard wizard)
         {
             Node<T> startNode = Nodes.Find(n => n.Data.Equals(start));
             Node<T> targetNode = Nodes.Find(n => n.Data.Equals(target));
-            if (startNode == null || targetNode == null)
-                throw new ArgumentException("Start- eller targetnode findes ikke.");
+            if (startNode == null || targetNode == null) throw new ArgumentException("Start- eller targetnode findes ikke.");
 
             Stack<Node<T>> stack = new Stack<Node<T>>();
             Dictionary<Node<T>, Node<T>> parent = new Dictionary<Node<T>, Node<T>>();
@@ -118,13 +75,21 @@ namespace DAlgorithms.Classes.Algorithms
                     Node<T> neighbor = edge.To;
                     if (!visited.Contains(neighbor))
                     {
-                        visited.Add(neighbor);
-                        parent[neighbor] = current;
-                        stack.Push(neighbor);
+                        if (IsEdgeAllowed(wizard, current, neighbor))
+                        {
+                            visited.Add(neighbor);
+                            parent[neighbor] = current;
+                            stack.Push(neighbor);
+                        }
                     }
                 }
             }
             return new List<Node<T>>();
+        }
+
+        private bool IsEdgeAllowed(Wizard wizard, Node<T> from, Node<T> to)
+        {
+            return true;
         }
 
         // Hjælpefunktion til at rekonstruere stien ud fra parent-pegeren

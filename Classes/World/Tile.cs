@@ -14,7 +14,15 @@ namespace DAlgorithms.Classes.World
         Wall,
         Path,
         Forest,
-        Monster
+        NoMonster,
+        Monster,
+        LockedStormTower,
+        OpenStormTower,
+        LockedIceTower,
+        OpenIceTower,
+        LockedPortal,
+        OpenPortal,
+        Start
     }
 
     /// <summary>
@@ -30,7 +38,7 @@ namespace DAlgorithms.Classes.World
         public int Height { get; private set; }
         public TileType Type { get; set; }
         public Texture2D Texture { get; set; }
-        public bool IsWalkable { get; set; } = true;
+        public bool IsWalkable { get; set; }
 
         /// <summary>
         /// Konstruerer en ny tile med den angivne position, dimensioner, type og tekstur.

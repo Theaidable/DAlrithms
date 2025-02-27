@@ -12,7 +12,7 @@ namespace DAlgorithms.Classes.Objects
     public class Tree
     {
         /// <summary>
-        /// Gets or sets positionen for træet (øverste venstre hjørne).
+        /// Gets or sets positionen for træet.
         /// </summary>
         public Vector2 Position { get; set; }
 

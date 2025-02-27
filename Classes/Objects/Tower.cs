@@ -15,7 +15,6 @@ namespace DAlgorithms.Classes.Objects
     {
         public TowerType Type { get; set; }
         public Vector2 Position { get; set; }
-        public bool IsVisited { get; set; } = false;
         public Texture2D Texture { get; private set; }
 
         private Texture2D iceTowerTexture;
