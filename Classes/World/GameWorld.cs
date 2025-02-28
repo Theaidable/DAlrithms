@@ -445,10 +445,14 @@ namespace DAlgorithms.Classes.World
             iceTower.Draw(_spriteBatch, 0.3f);
             stormTower.Draw(_spriteBatch, 0.3f);
 
-            //Tegn Keys            
-            foreach (Key key in keys)
+            if (!wizard.HasIceKey)
             {
-                key.Draw(_spriteBatch, 0.3f);
+                iceKey.Draw(_spriteBatch, 0.3f);
+            }
+
+            if (!wizard.HasStormKey)
+            {
+                stormKey.Draw(_spriteBatch, 0.3f);
             }
             
             //Tegn knapper
