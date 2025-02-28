@@ -262,6 +262,11 @@ namespace DAlgorithms.Classes.World
             }
         }
 
+        public void LoadMonsters()
+        {
+            //Metode til at loade monstre på stien
+        }
+
         public void LoadButtons()
         {
             btnRestartGame = new Button(buttonTexture, new Vector2(10, 10))
@@ -321,8 +326,8 @@ namespace DAlgorithms.Classes.World
             stormTower = new Tower(TowerType.Storm, new Vector2(stormX, stormY), stormTowerTexture);
             iceTower = new Tower(TowerType.Ice, new Vector2(iceX, iceY), iceTowerTexture);
 
-            nodePositions["StormTower"] = new Point((int)stormX, (int)stormY);
-            nodePositions["IceTower"] = new Point((int)iceX, (int)iceY);
+            nodePositions["StormTower"] = new Point((stormTileX), stormTileY);
+            nodePositions["IceTower"] = new Point(iceTileX, iceTileY);
         }
 
         public void LoadKeys()
@@ -353,7 +358,7 @@ namespace DAlgorithms.Classes.World
 
             iceKey = new Key(TowerType.Ice, new Vector2(iKeyX, iKeyY), iceTowerKeyTexture);
             keys.Add(iceKey);
-            nodePositions["IceKey"] = new Point((int)iKeyX, (int)iKeyY);
+            nodePositions["IceKey"] = new Point((int)iKeyX / tileWidth, (int)iKeyY / tileHeight);
             tileMap.SetTileType((int)iKeyX, (int)iKeyY, TileType.IceKey);
 
             randomTile = random.Next(walkableTiles.Count);
@@ -364,7 +369,7 @@ namespace DAlgorithms.Classes.World
 
             stormKey = new Key(TowerType.Storm, new Vector2(sKeyX, sKeyY), stormTowerKeyTexture);
             keys.Add(stormKey);
-            nodePositions["StormKey"] = new Point((int)sKeyX, (int)sKeyY);
+            nodePositions["StormKey"] = new Point((int)sKeyX / tileWidth, (int)sKeyY / tileHeight);
             tileMap.SetTileType((int)sKeyX, (int)sKeyY, TileType.StormKey);
         }
 
@@ -378,7 +383,7 @@ namespace DAlgorithms.Classes.World
 
             Vector2 portalPosition = new Vector2(xPos, yPos);
             portal = new Portal(portalPosition, portalTexture);
-            nodePositions["Exit"] = new Point((int)xPos, (int)yPos);
+            nodePositions["Exit"] = new Point(tileX, tileY);
         }
 
         public void LoadWizard()
@@ -391,7 +396,7 @@ namespace DAlgorithms.Classes.World
 
             Vector2 wizardPosition = new Vector2(xPos, yPos);
             wizard = new Wizard(wizardIdleTexture, wizardRunningTexture, wizardPosition, tileMap, this);
-            nodePositions["Start"] = new Point((int)xPos, (int)yPos);
+            nodePositions["Start"] = new Point(tileX, tileY);
             Debug.WriteLine($"Sat Start = ({nodePositions["Start"].X}, {nodePositions["Start"].Y})");
 
         }
@@ -499,10 +504,29 @@ namespace DAlgorithms.Classes.World
             graph.AddNode("IceTower");
             graph.AddNode("Exit");
 
-            //Fra Entrance
-            graph.AddDirectedEdge("Start", "StormKey");
-            graph.AddDirectedEdge("Start", "IceKey");
-            graph.AddEdge("StormKey", "IceKey");
+            // Hent tile-koordinater for Wizard, StormKey og IceKey
+            Point wizardPos = nodePositions["Start"];
+            Point stormKeyPos = nodePositions["StormKey"];
+            Point iceKeyPos = nodePositions["IceKey"];
+
+            // Beregn euklidisk afstand
+            float distanceToStormKeyFromWizard = Vector2.Distance(new Vector2(wizardPos.X, wizardPos.Y), new Vector2(stormKeyPos.X, stormKeyPos.Y));
+
+            float distanceToIceKeyFromWizard = Vector2.Distance(new Vector2(wizardPos.X, wizardPos.Y), new Vector2(iceKeyPos.X, iceKeyPos.Y));
+
+            Debug.WriteLine($"Afstand fra Wizard til StormKey: {distanceToStormKeyFromWizard}");
+            Debug.WriteLine($"Afstand fra Wizard til IceKey: {distanceToIceKeyFromWizard}");
+
+            //Fra Start
+            if (distanceToStormKeyFromWizard < distanceToIceKeyFromWizard)
+            {
+                graph.AddDirectedEdge("Start", "StormKey");
+            }
+            else
+            {
+                graph.AddDirectedEdge("Start", "IceKey");
+                graph.AddDirectedEdge("IceKey", "StormKey");
+            }
         }
 
         public void UpdateGraphBasedOnProximity(Wizard wizard)
@@ -560,18 +584,22 @@ namespace DAlgorithms.Classes.World
                 Debug.WriteLine($"NodeData: {node.Data}");
             }
 
-            // Få alle walkable tiles fra tilemap'et
-            List<Tile> walkableTiles = tileMap.GetAllWalkableTiles();
             List<Vector2> pixelPositions = new List<Vector2>();
 
-            foreach (Tile tile in walkableTiles)
+            // Konverter DFS-stien fra tile-koordinater til pixel-koordinater
+            foreach (var node in path)
             {
-                // Beregn midten af tile'en, så wizarden går præcist til midten
-                Vector2 centerPos = tile.Position + new Vector2(tileWidth / 2f, tileHeight / 2f);
+                Point tilePos = nodePositions[node.Data];  // Hent tile-koordinater
+                Tile tile = tileMap.GetTile(tilePos.X, tilePos.Y);
+
+                // Beregn midten af tile'en
+                Vector2 centerPos = tile.Position - new Vector2(0, 30);
                 pixelPositions.Add(centerPos);
+
+                Debug.WriteLine($"Node: {node.Data} -> Tile ({tilePos.X}, {tilePos.Y}) -> Pixel ({centerPos.X}, {centerPos.Y})");
             }
 
-            // Hvis wizarden forventer en liste af pixel-koordinater, kan du kalde:
+            // Start bevægelsen
             wizard.StartPathMovement(pixelPositions);
         }
     }

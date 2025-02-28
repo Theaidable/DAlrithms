@@ -145,49 +145,6 @@ namespace DAlgorithms.Classes.World
                     break;
             }
         }
-        public List<Tile> GetWalkableTilesBetween(Vector2 start, Vector2 end)
-        {
-            List<Tile> pathTiles = new List<Tile>();
-
-            Vector2 direction = end - start;
-            if (direction.Length() == 0)
-            {
-                Debug.WriteLine($"Samme start og slut tile: {start} → {end}");
-                return pathTiles;
-            }
-            direction.Normalize();
-
-            Vector2 currentPos = start;
-
-            Debug.WriteLine($"Finder walkable tiles mellem {start} → {end}");
-
-            while (Vector2.Distance(currentPos, end) > 1f)
-            {
-                currentPos += direction * tileWidth;
-
-                int tileX = (int)(currentPos.X / tileWidth);
-                int tileY = (int)(currentPos.Y / tileHeight);
-
-                if (tileX < 0 || tileX >= mapWidth || tileY < 0 || tileY >= mapHeight)
-                {
-                    Debug.WriteLine($"Tile uden for kortet: {tileX}, {tileY}");
-                    break;
-                }
-
-                Tile tile = GetTile(tileX, tileY);
-                if (tile.IsWalkable)
-                {
-                    Debug.WriteLine($"Walkable tile: {tileX}, {tileY}");
-                    pathTiles.Add(tile);
-                }
-                else
-                {
-                    Debug.WriteLine($"Ikke-walkable tile: {tileX}, {tileY}");
-                }
-            }
-
-            return pathTiles;
-        }
 
         public List<Tile> GetAllWalkableTiles()
         {
@@ -205,8 +162,6 @@ namespace DAlgorithms.Classes.World
             }
             return walkableTiles;
         }
-
-
 
         /// <summary>
         /// Tegner hele tilemap'et på skærmen.

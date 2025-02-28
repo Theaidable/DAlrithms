@@ -57,6 +57,12 @@ namespace DAlgorithms.Classes.Objects
             // Gem stien direkte som pixel-koordinater
             pathPositions = new List<Vector2>(pixelPath);
             currentTargetIndex = 0;
+
+            foreach (var pos in pathPositions)
+            {
+                Debug.WriteLine($"Path Position: X={pos.X}, Y={pos.Y}");
+            }
+
             // Skift til Running state
             CurrentState = WizardState.Running;
         }
@@ -85,10 +91,13 @@ namespace DAlgorithms.Classes.Objects
                 Vector2 direction = target - Position;
                 float distance = direction.Length();
 
-                if (distance < 1f)
+                // Sørg for at wizard stopper præcist ved tile-centret
+                if (distance < movementSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds)
                 {
-                    HandleTileInteraction(pathPositions[currentTargetIndex]);
+                    Position = target; // Sæt wizard præcist på tile-centret
+                    HandleTileInteraction(target);
                     currentTargetIndex++;
+
                     if (currentTargetIndex >= pathPositions.Count)
                     {
                         pathPositions = null;
@@ -99,9 +108,14 @@ namespace DAlgorithms.Classes.Objects
                 {
                     direction.Normalize();
                     Position += direction * movementSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                    // Tjek tile-interaktion for hver ny tile, wizard træder på
+                    HandleTileInteraction(Position);
                 }
             }
         }
+
+
 
         private void HandleTileInteraction(Vector2 position)
         {
@@ -165,13 +179,20 @@ namespace DAlgorithms.Classes.Objects
             }
         }
 
-
         public void Draw(SpriteBatch spriteBatch, float layerDepth)
         {
+            if (animationIndex >= idleFrames.Length || animationIndex >= runFrames.Length)
+            {
+                animationIndex = 0; // Reset animationen
+            }
+
             Texture2D currentFrame = CurrentState == WizardState.Idle ? idleFrames[animationIndex] : runFrames[animationIndex];
             float scale = 100f / idleFrames[0].Width;
 
-            spriteBatch.Draw(currentFrame, Position, null, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, layerDepth);
+            if(currentFrame != null)
+            {
+                spriteBatch.Draw(currentFrame, Position, null, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, layerDepth);
+            }
         }
     }
 }
