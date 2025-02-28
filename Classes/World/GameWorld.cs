@@ -69,9 +69,9 @@ namespace DAlgorithms.Classes.World
             {"Start", Point.Zero },
             {"StormKey", Point.Zero },
             {"IceKey", Point.Zero},
-            {"StormTower", new Point(2,7) },
-            {"IceTower", new Point(18,9)},
-            {"Exit", new Point(11,1) }
+            {"StormTower", Point.Zero },
+            {"IceTower", Point.Zero },
+            {"Exit", Point.Zero }
 
         };
 
@@ -320,6 +320,9 @@ namespace DAlgorithms.Classes.World
 
             stormTower = new Tower(TowerType.Storm, new Vector2(stormX, stormY), stormTowerTexture);
             iceTower = new Tower(TowerType.Ice, new Vector2(iceX, iceY), iceTowerTexture);
+
+            nodePositions["StormTower"] = new Point((int)stormX, (int)stormY);
+            nodePositions["IceTower"] = new Point((int)iceX, (int)iceY);
         }
 
         public void LoadKeys()
@@ -375,6 +378,7 @@ namespace DAlgorithms.Classes.World
 
             Vector2 portalPosition = new Vector2(xPos, yPos);
             portal = new Portal(portalPosition, portalTexture);
+            nodePositions["Exit"] = new Point((int)xPos, (int)yPos);
         }
 
         public void LoadWizard()
@@ -387,7 +391,7 @@ namespace DAlgorithms.Classes.World
 
             Vector2 wizardPosition = new Vector2(xPos, yPos);
             wizard = new Wizard(wizardIdleTexture, wizardRunningTexture, wizardPosition, tileMap, this);
-            nodePositions["Start"] = new Point(tileX, tileY);
+            nodePositions["Start"] = new Point((int)xPos, (int)yPos);
             Debug.WriteLine($"Sat Start = ({nodePositions["Start"].X}, {nodePositions["Start"].Y})");
 
         }
@@ -552,25 +556,19 @@ namespace DAlgorithms.Classes.World
                 Debug.WriteLine($"NodeData: {node.Data}");
             }
 
-            List<Tile> tilePath = new List<Tile>();
+            // Få alle walkable tiles fra tilemap'et
+            List<Tile> walkableTiles = tileMap.GetAllWalkableTiles();
+            List<Vector2> pixelPositions = new List<Vector2>();
 
-            for (int i = 0; i < path.Count - 1; i++)
+            foreach (Tile tile in walkableTiles)
             {
-                Point startNode = nodePositions[path[i].Data];
-                Point endNode = nodePositions[path[i + 1].Data];
-
-                Vector2 startTile = new Vector2(startNode.X / tileWidth, startNode.Y / tileHeight);
-                Vector2 endTile = new Vector2(endNode.X / tileWidth, endNode.Y / tileHeight);
-
-                Debug.WriteLine($"startTile.X:{startTile.X} og startTile.Y:{startTile.Y}");
-                Debug.WriteLine($"endTile.X:{endTile.X} og endTile.Y:{endTile.Y}");
-
-                List<Tile> tilesBetween = tileMap.GetWalkableTilesBetween(startTile, endTile);
-                tilePath.AddRange(tilesBetween);
+                // Beregn midten af tile'en, så wizarden går præcist til midten
+                Vector2 centerPos = tile.Position + new Vector2(tileWidth / 2f, tileHeight / 2f);
+                pixelPositions.Add(centerPos);
             }
 
-            // Start bevægelse langs den fundne sti
-            wizard.StartPathMovement(tilePath);
+            // Hvis wizarden forventer en liste af pixel-koordinater, kan du kalde:
+            wizard.StartPathMovement(pixelPositions);
         }
     }
 }

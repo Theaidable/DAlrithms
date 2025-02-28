@@ -165,8 +165,8 @@ namespace DAlgorithms.Classes.World
             {
                 currentPos += direction * tileWidth;
 
-                int tileX = (int)(currentPos.X);
-                int tileY = (int)(currentPos.Y);
+                int tileX = (int)(currentPos.X / tileWidth);
+                int tileY = (int)(currentPos.Y / tileHeight);
 
                 if (tileX < 0 || tileX >= mapWidth || tileY < 0 || tileY >= mapHeight)
                 {
@@ -187,6 +187,23 @@ namespace DAlgorithms.Classes.World
             }
 
             return pathTiles;
+        }
+
+        public List<Tile> GetAllWalkableTiles()
+        {
+            List<Tile> walkableTiles = new List<Tile>();
+            for (int x = 0; x < mapWidth; x++)
+            {
+                for (int y = 0; y < mapHeight; y++)
+                {
+                    Tile tile = GetTile(x, y);
+                    if (tile.IsWalkable)
+                    {
+                        walkableTiles.Add(tile);
+                    }
+                }
+            }
+            return walkableTiles;
         }
 
 

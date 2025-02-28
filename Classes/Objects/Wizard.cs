@@ -46,28 +46,16 @@ namespace DAlgorithms.Classes.Objects
             Position = position;
         }
 
-
-        /// <summary>
-        /// Starter bevægelse langs en given sti. Stien skal være en liste af Tile-objekter.
-        /// Vi beregner her tile-center for hvert element og gemmer dem som mål.
-        /// </summary>
-        /// <param name="tilePath">Stien som en liste af Tiles.</param>
-        public void StartPathMovement(List<Tile> tilePath)
+        public void StartPathMovement(List<Vector2> pixelPath)
         {
-            if (tilePath == null || tilePath.Count == 0)
+            if (pixelPath == null || pixelPath.Count == 0)
             {
                 Debug.WriteLine("Ingen sti fundet! Wizard står stille.");
                 return;
             }
 
-            // Omdan stien til en liste af positioner (tile-centre)
-            pathPositions = new List<Vector2>();
-            foreach (var tile in tilePath)
-            {
-                Vector2 targetPos = new Vector2(tile.Position.X + tile.Width / 2f - (idleFrames[0].Width / 2f), tile.Position.Y + tile.Height / 2f - (idleFrames[0].Height / 2f));
-                pathPositions.Add(targetPos);
-            }
-
+            // Gem stien direkte som pixel-koordinater
+            pathPositions = new List<Vector2>(pixelPath);
             currentTargetIndex = 0;
             // Skift til Running state
             CurrentState = WizardState.Running;
@@ -99,6 +87,7 @@ namespace DAlgorithms.Classes.Objects
 
                 if (distance < 1f)
                 {
+                    HandleTileInteraction(pathPositions[currentTargetIndex]);
                     currentTargetIndex++;
                     if (currentTargetIndex >= pathPositions.Count)
                     {
